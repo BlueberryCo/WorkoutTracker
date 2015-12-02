@@ -1,7 +1,11 @@
 package com.entities;
 
+import java.io.Serializable;
+
 /**
  * Created by boiko on 12/1/2015.
  */
-public class ClientWorkout {
+public class ClientWorkout implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 }
