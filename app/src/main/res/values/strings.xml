@@ -3,4 +3,8 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="sLogin">Login</string>
+    <string name="sUserName">Enter Name</string>
+    <string name="sBLogin">login</string>
+    <string name="sPasswod">Password</string>
 </resources>
