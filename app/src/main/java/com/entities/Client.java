@@ -8,4 +8,7 @@ import java.io.Serializable;
 public class Client implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    public static final int CLIENT_TYPE_OWNER = 1;
+    public static final int CLIENT_TYPE_CLIENT = 2;
 }
