@@ -1,8 +1,21 @@
 package com.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.entities.Client;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by boiko on 12/1/2015.
@@ -10,6 +23,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "workouttrackerdatabase";
+
+    private static final String LOG = "DatabaseHelper";
 
     private static final int DATABASE_VERSION = 1;
 
@@ -108,4 +123,98 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+    private Date parseStringToDate(String input){
+        DateFormat format = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS.SSS", Locale.ENGLISH);
+        try {
+            return  format.parse(input);
+        } catch (ParseException e) {
+            Log.e(LOG, e.getStackTrace().toString());
+        }
+
+        return null;
+    }
+
+    private String dateToString(Date input){
+        DateFormat format = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS.SSS", Locale.ENGLISH);
+        return format.format(input);
+    }
+
+    //region Client methods
+
+    public Client getOwner(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_CLIENTS + " WHERE " + KEY_TYPE +
+                " = " + Client.CLIENT_TYPE_OWNER;
+
+        Cursor c = db.rawQuery(query, null);
+
+        Client result = null;
+
+        if(c.moveToFirst()){
+            result = new Client();
+            result.setId(c.getInt(c.getColumnIndex(KEY_ID_CLIENT)));
+            result.setFirstName(c.getString(c.getColumnIndex(KEY_FIRST_NAME)));
+            result.setLastName(c.getString(c.getColumnIndex(KEY_LAST_NAME)));
+            result.setBirthDate(parseStringToDate(c.getString(c.getColumnIndex(KEY_BIRTH_DATE))));
+            result.setHeight(c.getFloat(c.getColumnIndex(KEY_HEIGHT_CLIENT)));
+            result.setWeight(c.getFloat(c.getColumnIndex(KEY_WEIGHT_CLIENT)));
+            result.setPhone(c.getString(c.getColumnIndex(KEY_PHONE)));
+            result.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
+            result.setType(Client.CLIENT_TYPE_OWNER);
+        }
+
+        return result;
+    }
+
+    public List<Client> getAllClients(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_CLIENTS + " WHERE " + KEY_TYPE +
+                " = " + Client.CLIENT_TYPE_CLIENT;
+
+        List<Client> results = new ArrayList<>();
+
+        Cursor c = db.rawQuery(query, null);
+
+        if(c.moveToFirst()){
+            do{
+                Client result = new Client();
+                result.setId(c.getInt(c.getColumnIndex(KEY_ID_CLIENT)));
+                result.setFirstName(c.getString(c.getColumnIndex(KEY_FIRST_NAME)));
+                result.setLastName(c.getString(c.getColumnIndex(KEY_LAST_NAME)));
+                result.setBirthDate(parseStringToDate(c.getString(c.getColumnIndex(KEY_BIRTH_DATE))));
+                result.setHeight(c.getFloat(c.getColumnIndex(KEY_HEIGHT_CLIENT)));
+                result.setWeight(c.getFloat(c.getColumnIndex(KEY_WEIGHT_CLIENT)));
+                result.setPhone(c.getString(c.getColumnIndex(KEY_PHONE)));
+                result.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
+                result.setType(Client.CLIENT_TYPE_CLIENT);
+
+                results.add(result);
+            }while (c.moveToNext());
+        }
+
+        return results;
+    }
+
+    public Client createClient(Client client){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_FIRST_NAME, client.getFirstName());
+        values.put(KEY_LAST_NAME, client.getLastName());
+        values.put(KEY_BIRTH_DATE, dateToString(client.getBirthDate()));
+        values.put(KEY_HEIGHT_CLIENT, client.getHeight());
+        values.put(KEY_WEIGHT_CLIENT, client.getWeight());
+        values.put(KEY_PHONE, client.getPhone());
+        values.put(KEY_EMAIL, client.getEmail());
+        values.put(KEY_TYPE, Client.CLIENT_TYPE_CLIENT);
+
+        int clientId = (int)db.insert(TABLE_CLIENTS, null, values);
+
+        return client;
+    }
+
+    //endregion
 }
