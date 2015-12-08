@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.entities.Client;
+import com.entities.ClientStats;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -213,7 +214,128 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         int clientId = (int)db.insert(TABLE_CLIENTS, null, values);
 
+        client.setId(clientId);
         return client;
+    }
+
+    public void updateClient(Client client){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_FIRST_NAME, client.getFirstName());
+        values.put(KEY_LAST_NAME, client.getLastName());
+        values.put(KEY_BIRTH_DATE, dateToString(client.getBirthDate()));
+        values.put(KEY_HEIGHT_CLIENT, client.getHeight());
+        values.put(KEY_WEIGHT_CLIENT, client.getWeight());
+        values.put(KEY_PHONE, client.getPhone());
+        values.put(KEY_EMAIL, client.getEmail());
+        values.put(KEY_TYPE, Client.CLIENT_TYPE_CLIENT);
+
+        db.update(TABLE_CLIENTS, values, KEY_ID_CLIENT + " = ?",
+                new String[]{String.valueOf(client.getId())});
+    }
+
+    public void deleteClient(int clientId){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        boolean hasErrors = false;
+
+        db.beginTransaction();
+
+        try {
+            db.delete(TABLE_CLIENT_STATS, KEY_STATS_CLIENT_ID + " = ?",
+                    new String[]{String.valueOf(clientId)});
+
+            db.delete(TABLE_CLIENT_WORKOUT, KEY_CLIENT_WORKOUT_CLIENT_ID + " = ?",
+                    new String[]{String.valueOf(clientId)});
+
+            db.delete(TABLE_CLIENTS, KEY_ID_CLIENT + " = ?",
+                    new String[]{String.valueOf(clientId)});
+        }catch (Exception e){
+            hasErrors = true;
+            Log.e(LOG, e.getStackTrace().toString());
+        }
+
+        if(!hasErrors) {
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        }
+    }
+
+    //endregion
+
+    //region Client stats methods
+
+    public List<ClientStats> getClientStatsForClient(int clientId){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_CLIENT_STATS + " WHERE " +
+                KEY_STATS_CLIENT_ID + " = " + String.valueOf(clientId);
+
+        List<ClientStats> results = new ArrayList<>();
+
+        Cursor c = db.rawQuery(query, null);
+
+        if(c.moveToFirst()){
+            do{
+                ClientStats result = new ClientStats();
+                result.setId(c.getInt(c.getColumnIndex(KEY_ID_CLIENT_STATS)));
+                result.setClientId(c.getInt(c.getColumnIndex(KEY_STATS_CLIENT_ID)));
+                result.setMaxBackSquat(c.getInt(c.getColumnIndex(KEY_MAX_BACK_SQUAT)));
+                result.setMaxFrontSquat(c.getInt(c.getColumnIndex(KEY_MAX_FRONT_SQUAT)));
+                result.setMaxDeadlift(c.getInt(c.getColumnIndex(KEY_MAX_DEADLIFT)));
+                result.setMaxBenchpress(c.getInt(c.getColumnIndex(KEY_MAX_BENCHPRESS)));
+                result.setMaxShoulderspress(c.getInt(c.getColumnIndex(KEY_MAX_SHOULDERSPRESS)));
+                result.setDate(parseStringToDate(c.getString(c.getColumnIndex(KEY_DATE_STATS))));
+
+                results.add(result);
+            }while (c.moveToNext());
+        }
+
+        return results;
+    }
+
+    public ClientStats createClientStats(ClientStats clientStats){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_STATS_CLIENT_ID, clientStats.getClientId());
+        values.put(KEY_WEIGHT_STATS, clientStats.getWeight());
+        values.put(KEY_MAX_BACK_SQUAT, clientStats.getMaxBackSquat());
+        values.put(KEY_MAX_FRONT_SQUAT, clientStats.getMaxFrontSquat());
+        values.put(KEY_MAX_DEADLIFT, clientStats.getMaxDeadlift());
+        values.put(KEY_MAX_BENCHPRESS, clientStats.getMaxBenchpress());
+        values.put(KEY_MAX_SHOULDERSPRESS, clientStats.getMaxShoulderspress());
+        values.put(KEY_DATE_STATS, dateToString(new Date()));
+
+        int clientStatsId = (int)db.insert(TABLE_CLIENT_STATS, null, values);
+        clientStats.setId(clientStatsId);
+
+        return clientStats;
+    }
+
+    public void updateClientStats(ClientStats clientStats){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_STATS_CLIENT_ID, clientStats.getClientId());
+        values.put(KEY_WEIGHT_STATS, clientStats.getWeight());
+        values.put(KEY_MAX_BACK_SQUAT, clientStats.getMaxBackSquat());
+        values.put(KEY_MAX_FRONT_SQUAT, clientStats.getMaxFrontSquat());
+        values.put(KEY_MAX_DEADLIFT, clientStats.getMaxDeadlift());
+        values.put(KEY_MAX_BENCHPRESS, clientStats.getMaxBenchpress());
+        values.put(KEY_MAX_SHOULDERSPRESS, clientStats.getMaxShoulderspress());
+        values.put(KEY_DATE_STATS, dateToString(clientStats.getDate()));
+
+        db.update(TABLE_CLIENT_STATS, values, KEY_ID_CLIENT_STATS + " = ? ",
+                new String[]{String.valueOf(clientStats.getId())});
+    }
+
+    public void deleteClientStats(int clientStatsId){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_CLIENT_STATS, KEY_ID_CLIENT_STATS + " = ?",
+                new String[]{String.valueOf(clientStatsId)});
     }
 
     //endregion
