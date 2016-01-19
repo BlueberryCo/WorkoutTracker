@@ -35,6 +35,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_CLIENT_WORKOUT = "client_workout";
     private static final String TABLE_DRAFT_TRAINING_PROGRAMS = "draft_training_programs";
     private static final String TABLE_WORKOUT_OF_THE_DAY = "wod";
+    private static final String TABLE_EXERCISES = "exercises";
+    private static final String TABLE_SETS = "sets";
 
     //Clients table column names
     private static final String KEY_ID_CLIENT = "Id";
@@ -63,7 +65,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_CLIENT_WORKOUT_CLIENT_ID = "ClientId";
     private static final String KEY_DATE_CLIENT_WORKOUT = "Date";
     private static final String KEY_IS_FINISHED = "IsFinished";
-    private static final String KEY_CONTENT_CLIENT_WORKOUT = "Content";
 
     //WOD table column names
     private static final String KEY_ID_WOD = "Id";
@@ -75,6 +76,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_CATEGORY = "Category";
     private static final String KEY_TITLE = "Title";
     private static final String KEY_CONTENT_DRAFT_TRAINING_PROGRAMS = "Content";
+
+    //Exercises table column names
+    private static final String KEY_ID_EXERCISES = "Id";
+    private static final String KEY_EXERCISE_EXERCISES = "Exercise";
+    private static final String KEY_CLIENT_WORKOUT_ID = "ClientWorkoutId";
+    private static final String KEY_DESCRIPTION = "Description";
+
+    //Sets table column names
+    private static final String KEY_ID_SETS = "Id";
+    private static final String KEY_EXERCISE_ID = "ExerciseId";
+    private static final String KEY_EXERCISE_SETS = "Exercise";
+    private static final String KEY_SETS = "Sets";
+    private static final String KEY_REPS = "Reps";
+    private static final String KEY_WEIGHT_SETS = "Weight";
+
 
     //Table creates
 
@@ -94,8 +110,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_CLIENT_WORKOUT = "CREATE TABLE " + TABLE_CLIENT_WORKOUT +
             "(" + KEY_ID_CLIENT_WORKOUT + " INTEGER PRIMARY KEY," + KEY_CLIENT_WORKOUT_CLIENT_ID +
-            " INTEGER," + KEY_DATE_CLIENT_WORKOUT + " DATETIME," + KEY_IS_FINISHED + " INTEGER," +
-            KEY_CONTENT_CLIENT_WORKOUT + " TEXT," + "FOREIGN KEY(" + KEY_CLIENT_WORKOUT_CLIENT_ID +
+            " INTEGER," + KEY_DATE_CLIENT_WORKOUT + " DATETIME," + KEY_IS_FINISHED + " INTEGER,"
+            + "FOREIGN KEY(" + KEY_CLIENT_WORKOUT_CLIENT_ID +
             ") REFERENCES " + TABLE_CLIENTS + "(" + KEY_ID_CLIENT + ");";
 
     private static final String CREATE_TABLE_WOD = "CREATE TABLE " + TABLE_WORKOUT_OF_THE_DAY +
@@ -105,6 +121,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_DRAFT_TRAINING_PROGRAMS = "CREATE TABLE " + TABLE_DRAFT_TRAINING_PROGRAMS +
             "(" + KEY_ID_DRAFT_TRAINING_PROGRAMS + " INTEGER PRIMARY KEY," + KEY_CATEGORY + " TEXT," +
             KEY_TITLE + " TEXT," + KEY_CONTENT_DRAFT_TRAINING_PROGRAMS + " TEXT);";
+
+    private static final String CREATE_TABLE_EXERCISES = "CREATE TABLE " + TABLE_EXERCISES + "(" + KEY_ID_EXERCISES + " INTEGER PRIMARY KEY," +
+            KEY_EXERCISE_EXERCISES + " TEXT," + KEY_CLIENT_WORKOUT_ID + " INTEGER," + KEY_DESCRIPTION + " TEXT," +
+            "FOREIGN KEY(" + KEY_CLIENT_WORKOUT_ID + ") REFERENCES " + TABLE_CLIENT_WORKOUT + "(" + KEY_ID_CLIENT_WORKOUT + ");";
+
+    private static final String CREATE_TABLE_SETS = "CREATE TABLE " + TABLE_SETS + "(" + KEY_ID_SETS +
+            " INTEGER PRIMARY KEY, " + KEY_EXERCISE_ID + " INTEGER," + KEY_EXERCISE_SETS + " TEXT," + KEY_SETS + " INTEGER, " +
+            KEY_REPS + " INTEGER," + KEY_WEIGHT_SETS + " INTEGER," + "FOREIGN KEY(" + KEY_EXERCISE_ID + ") REFERENCES " + TABLE_EXERCISES + "(" +
+            KEY_ID_EXERCISES + ");";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -118,6 +143,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CLIENT_WORKOUT);
         db.execSQL(CREATE_TABLE_WOD);
         db.execSQL(CREATE_TABLE_DRAFT_TRAINING_PROGRAMS);
+        db.execSQL(CREATE_TABLE_EXERCISES);
+        db.execSQL(CREATE_TABLE_SETS);
     }
 
     @Override
@@ -281,6 +308,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ClientStats result = new ClientStats();
                 result.setId(c.getInt(c.getColumnIndex(KEY_ID_CLIENT_STATS)));
                 result.setClientId(c.getInt(c.getColumnIndex(KEY_STATS_CLIENT_ID)));
+                result.setWeight(c.getFloat(c.getColumnIndex(KEY_WEIGHT_STATS)));
                 result.setMaxBackSquat(c.getInt(c.getColumnIndex(KEY_MAX_BACK_SQUAT)));
                 result.setMaxFrontSquat(c.getInt(c.getColumnIndex(KEY_MAX_FRONT_SQUAT)));
                 result.setMaxDeadlift(c.getInt(c.getColumnIndex(KEY_MAX_DEADLIFT)));
@@ -337,6 +365,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_CLIENT_STATS, KEY_ID_CLIENT_STATS + " = ?",
                 new String[]{String.valueOf(clientStatsId)});
     }
+
+    //endregion
+
+    //region Client workout methods
+
+    //endregion
+
+    //region Exercise methods
+
+    //endregion
+
+    //region Set methods
 
     //endregion
 }
