@@ -44,7 +44,7 @@ public class ClientWorkout implements Serializable {
         this.date = date;
     }
 
-    public boolean isFinished() {
+    public boolean getIsFinished() {
         return isFinished;
     }
 

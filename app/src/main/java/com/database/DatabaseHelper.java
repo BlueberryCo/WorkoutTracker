@@ -9,6 +9,9 @@ import android.util.Log;
 
 import com.entities.Client;
 import com.entities.ClientStats;
+import com.entities.ClientWorkout;
+import com.entities.Exercise;
+import com.entities.Set;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -370,13 +373,249 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //region Client workout methods
 
+    public List<ClientWorkout> getClientWorkoutForClient(int clientId){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_CLIENT_WORKOUT + " WHERE " + KEY_CLIENT_WORKOUT_CLIENT_ID + " = " +
+                String.valueOf(clientId);
+
+        List<ClientWorkout> results = new ArrayList<>();
+
+        Cursor c = db.rawQuery(query, null);
+
+        if(c.moveToFirst()){
+            do{
+                ClientWorkout result = new ClientWorkout();
+                result.setId(c.getInt(c.getColumnIndex(KEY_ID_CLIENT_WORKOUT)));
+                result.setClientId(c.getInt(c.getColumnIndex(KEY_CLIENT_WORKOUT_CLIENT_ID)));
+                result.setDate(parseStringToDate(c.getString(c.getColumnIndex(KEY_DATE_CLIENT_WORKOUT))));
+                result.setIsFinished(c.getInt(c.getColumnIndex(KEY_IS_FINISHED)) > 0);
+
+                results.add(result);
+            }while(c.moveToNext());
+        }
+
+        return results;
+    }
+
+    public ClientWorkout createClientWorkout(ClientWorkout clientWorkout){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_CLIENT_WORKOUT_CLIENT_ID, clientWorkout.getClientId());
+        values.put(KEY_DATE_CLIENT_WORKOUT, dateToString(clientWorkout.getDate()));
+        values.put(KEY_IS_FINISHED, clientWorkout.getIsFinished() ? 1 : 0);
+
+        int clientWorkoutId = (int)db.insert(TABLE_CLIENT_WORKOUT, null, values);
+        clientWorkout.setId(clientWorkoutId);
+
+        return clientWorkout;
+    }
+
+    public void updateClientWorkout(ClientWorkout clientWorkout){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_CLIENT_WORKOUT_CLIENT_ID, clientWorkout.getClientId());
+        values.put(KEY_DATE_CLIENT_WORKOUT, dateToString(clientWorkout.getDate()));
+        values.put(KEY_IS_FINISHED, clientWorkout.getIsFinished() ? 1 : 0);
+
+        db.update(TABLE_CLIENT_WORKOUT, values, KEY_ID_CLIENT_WORKOUT + " = ? ",
+                new String[]{String.valueOf(clientWorkout.getId())});
+    }
+
+    public void deleteClientWorkout(int clientWorkoutId){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        boolean hasErrors = false;
+
+        db.beginTransaction();
+
+        try{
+
+            //Delete sets for this client workout
+
+            String deleteSetsQuery = "DELETE FROM " + TABLE_SETS + " JOIN " + TABLE_EXERCISES + " ON " +
+                    TABLE_SETS + "." + KEY_EXERCISE_ID + " = " + TABLE_EXERCISES + "." + KEY_ID_EXERCISES
+                    + " WHERE " + TABLE_EXERCISES + "." + KEY_CLIENT_WORKOUT_ID + " = ?";
+
+            db.rawQuery(deleteSetsQuery, new String[]{String.valueOf(clientWorkoutId)});
+
+            //Delete exercises for this client workout
+            db.delete(TABLE_EXERCISES, KEY_CLIENT_WORKOUT_ID + " = ?",
+                    new String[]{String.valueOf(clientWorkoutId)});
+
+            //Delete the client workout
+            db.delete(TABLE_CLIENT_WORKOUT, KEY_ID_CLIENT_WORKOUT + " = ?",
+                    new String[]{String.valueOf(clientWorkoutId)});
+
+        }catch (Exception e){
+            hasErrors = true;
+            Log.e(LOG, e.getStackTrace().toString());
+        }
+
+        if(!hasErrors) {
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        }
+    }
+
     //endregion
 
     //region Exercise methods
 
+    public List<Exercise>  getExercisesForWorkout(int clientWorkoutId){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_EXERCISES + " WHERE " + KEY_CLIENT_WORKOUT_ID + " = " +
+                String.valueOf(clientWorkoutId);
+
+        List<Exercise> results = new ArrayList<>();
+
+        Cursor c = db.rawQuery(query, null);
+
+        if(c.moveToFirst()){
+            do{
+                Exercise result = new Exercise();
+                result.setId(c.getInt(c.getColumnIndex(KEY_ID_EXERCISES)));
+                result.setExercise(c.getString(c.getColumnIndex(KEY_EXERCISE_EXERCISES)));
+                result.setClientWorkoutId(c.getInt(c.getColumnIndex(KEY_CLIENT_WORKOUT_ID)));
+                result.setDescription(c.getString(c.getColumnIndex(KEY_DESCRIPTION)));
+
+                results.add(result);
+            }while(c.moveToNext());
+        }
+
+        return results;
+    }
+
+    public Exercise createExercise(Exercise exercise){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_EXERCISE_EXERCISES, exercise.getExercise());
+        values.put(KEY_CLIENT_WORKOUT_ID, exercise.getClientWorkoutId());
+        values.put(KEY_DESCRIPTION, exercise.getDescription());
+
+        int exerciseId = (int)db.insert(TABLE_EXERCISES, null, values);
+        exercise.setId((exerciseId));
+
+        return exercise;
+    }
+
+    public void updateExercise(Exercise exercise){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_EXERCISE_EXERCISES, exercise.getExercise());
+        values.put(KEY_CLIENT_WORKOUT_ID, exercise.getClientWorkoutId());
+        values.put(KEY_DESCRIPTION, exercise.getDescription());
+
+        db.update(TABLE_EXERCISES, values, KEY_EXERCISE_ID + " = ?",
+                new String[]{String.valueOf(exercise.getId())});
+    }
+
+    public void deleteExercise(int exerciseId){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        boolean hasErrors = false;
+
+        db.beginTransaction();
+
+        try{
+
+            //Delete sets for this exercise
+            db.delete(TABLE_SETS, KEY_EXERCISE_ID + " = ?", new String[]{String.valueOf(exerciseId)});
+
+            //Delete the exercise
+            db.delete(TABLE_EXERCISES, KEY_ID_EXERCISES + " = ?", new String[]{String.valueOf(exerciseId)});
+
+        }catch (Exception e){
+            hasErrors = true;
+            Log.e(LOG, e.getStackTrace().toString());
+        }
+
+        if(!hasErrors) {
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        }
+    }
+
     //endregion
 
     //region Set methods
+
+    public List<Set> getSetsForExercise(int exerciseId){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_SETS + " WHERE " + KEY_EXERCISE_ID + " = " +
+                String.valueOf(exerciseId);
+
+        List<Set> results = new ArrayList<>();
+
+        Cursor c = db.rawQuery(query, null);
+
+        if(c.moveToFirst()){
+            do {
+                Set result = new Set();
+                result.setId(c.getInt(c.getColumnIndex(KEY_ID_SETS)));
+                result.setExerciseId(c.getInt(c.getColumnIndex(KEY_EXERCISE_ID)));
+                result.setExercise(c.getString(c.getColumnIndex(KEY_EXERCISE_SETS)));
+                result.setSets(c.getInt(c.getColumnIndex(KEY_SETS)));
+                result.setReps(c.getInt(c.getColumnIndex(KEY_REPS)));
+                result.setWeight(c.getInt(c.getColumnIndex(KEY_WEIGHT_SETS)));
+
+                results.add(result);
+            }while (c.moveToNext());
+        }
+
+        return results;
+    }
+
+    public Set createSet(Set set){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        if(set.getExerciseId() != null){
+            values.put(KEY_EXERCISE_ID, set.getExerciseId());
+        }else {
+            values.putNull(KEY_EXERCISE_ID);
+        }
+        values.put(KEY_EXERCISE_SETS, set.getExercise());
+        values.put(KEY_SETS, set.getSets());
+        values.put(KEY_REPS, set.getReps());
+        values.put(KEY_WEIGHT_SETS, set.getWeight());
+
+        int setId = (int)db.insert(TABLE_SETS, null, values);
+        set.setId(setId);
+
+        return set;
+    }
+
+    public void updateSet(Set set){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        if(set.getExerciseId() != null){
+            values.put(KEY_EXERCISE_ID, set.getExerciseId());
+        }else {
+            values.putNull(KEY_EXERCISE_ID);
+        }
+        values.put(KEY_EXERCISE_SETS, set.getExercise());
+        values.put(KEY_SETS, set.getSets());
+        values.put(KEY_REPS, set.getReps());
+        values.put(KEY_WEIGHT_SETS, set.getWeight());
+
+        db.update(TABLE_SETS, values, KEY_ID_SETS + " = ?",
+                new String[]{String.valueOf(set.getId())});
+    }
+
+    public void deleteSet(int setId){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_SETS, KEY_ID_SETS + " = ?",
+                new String[]{String.valueOf(setId)});
+    }
 
     //endregion
 }
