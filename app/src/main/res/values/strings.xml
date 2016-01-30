@@ -7,4 +7,6 @@
     <string name="sUserName">Enter Name</string>
     <string name="sBLogin">login</string>
     <string name="sPasswod">Password</string>
+    <string name="title_activity_client_profile">ClientProfile</string>
+    <string name="title_activity_client_stats">ClientStatsActivity</string>
 </resources>
