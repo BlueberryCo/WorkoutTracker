@@ -12,6 +12,7 @@ import com.entities.ClientStats;
 import com.entities.ClientWorkout;
 import com.entities.Exercise;
 import com.entities.Set;
+import com.entities.Util;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -156,19 +157,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private Date parseStringToDate(String input){
-        DateFormat format = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS.SSS", Locale.ENGLISH);
-        try {
-            return  format.parse(input);
-        } catch (ParseException e) {
-            Log.e(LOG, e.getStackTrace().toString());
-        }
-
-        return null;
+        return Util.parseStringToDate(input);
     }
 
     private String dateToString(Date input){
-        DateFormat format = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS.SSS", Locale.ENGLISH);
-        return format.format(input);
+        return Util.dateToString(input);
+    }
+
+    private boolean isStringNullOrEmpty(String input){
+        return Util.isNullOrEmptyString(input);
     }
 
     //region Client methods
@@ -188,11 +185,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             result.setId(c.getInt(c.getColumnIndex(KEY_ID_CLIENT)));
             result.setFirstName(c.getString(c.getColumnIndex(KEY_FIRST_NAME)));
             result.setLastName(c.getString(c.getColumnIndex(KEY_LAST_NAME)));
-            result.setBirthDate(parseStringToDate(c.getString(c.getColumnIndex(KEY_BIRTH_DATE))));
-            result.setHeight(c.getFloat(c.getColumnIndex(KEY_HEIGHT_CLIENT)));
-            result.setWeight(c.getFloat(c.getColumnIndex(KEY_WEIGHT_CLIENT)));
-            result.setPhone(c.getString(c.getColumnIndex(KEY_PHONE)));
-            result.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
+            if(!c.isNull(c.getColumnIndex(KEY_BIRTH_DATE))) {
+                result.setBirthDate(parseStringToDate(c.getString(c.getColumnIndex(KEY_BIRTH_DATE))));
+            }
+            if(!c.isNull(c.getColumnIndex(KEY_HEIGHT_CLIENT))) {
+                result.setHeight(c.getFloat(c.getColumnIndex(KEY_HEIGHT_CLIENT)));
+            }
+            if(!c.isNull(c.getColumnIndex(KEY_WEIGHT_CLIENT))) {
+                result.setWeight(c.getFloat(c.getColumnIndex(KEY_WEIGHT_CLIENT)));
+            }
+            if(!c.isNull(c.getColumnIndex(KEY_PHONE))) {
+                result.setPhone(c.getString(c.getColumnIndex(KEY_PHONE)));
+            }
+            if(!c.isNull(c.getColumnIndex(KEY_EMAIL))) {
+                result.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
+            }
             result.setType(Client.CLIENT_TYPE_OWNER);
         }
 
@@ -215,11 +222,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 result.setId(c.getInt(c.getColumnIndex(KEY_ID_CLIENT)));
                 result.setFirstName(c.getString(c.getColumnIndex(KEY_FIRST_NAME)));
                 result.setLastName(c.getString(c.getColumnIndex(KEY_LAST_NAME)));
-                result.setBirthDate(parseStringToDate(c.getString(c.getColumnIndex(KEY_BIRTH_DATE))));
-                result.setHeight(c.getFloat(c.getColumnIndex(KEY_HEIGHT_CLIENT)));
-                result.setWeight(c.getFloat(c.getColumnIndex(KEY_WEIGHT_CLIENT)));
-                result.setPhone(c.getString(c.getColumnIndex(KEY_PHONE)));
-                result.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
+                if(!c.isNull(c.getColumnIndex(KEY_BIRTH_DATE))) {
+                    result.setBirthDate(parseStringToDate(c.getString(c.getColumnIndex(KEY_BIRTH_DATE))));
+                }
+                if(!c.isNull(c.getColumnIndex(KEY_HEIGHT_CLIENT))) {
+                    result.setHeight(c.getFloat(c.getColumnIndex(KEY_HEIGHT_CLIENT)));
+                }
+                if(!c.isNull(c.getColumnIndex(KEY_WEIGHT_CLIENT))) {
+                    result.setWeight(c.getFloat(c.getColumnIndex(KEY_WEIGHT_CLIENT)));
+                }
+                if(!c.isNull(c.getColumnIndex(KEY_PHONE))) {
+                    result.setPhone(c.getString(c.getColumnIndex(KEY_PHONE)));
+                }
+                if(!c.isNull(c.getColumnIndex(KEY_EMAIL))) {
+                    result.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
+                }
                 result.setType(Client.CLIENT_TYPE_CLIENT);
 
                 results.add(result);
@@ -235,11 +252,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_FIRST_NAME, client.getFirstName());
         values.put(KEY_LAST_NAME, client.getLastName());
-        values.put(KEY_BIRTH_DATE, dateToString(client.getBirthDate()));
-        values.put(KEY_HEIGHT_CLIENT, client.getHeight());
-        values.put(KEY_WEIGHT_CLIENT, client.getWeight());
-        values.put(KEY_PHONE, client.getPhone());
-        values.put(KEY_EMAIL, client.getEmail());
+        if(client.getBirthDate() != null) {
+            values.put(KEY_BIRTH_DATE, dateToString(client.getBirthDate()));
+        }else{
+            values.putNull(KEY_BIRTH_DATE);
+        }
+        if(client.getHeight() != null) {
+            values.put(KEY_HEIGHT_CLIENT, client.getHeight());
+        }else {
+            values.putNull(KEY_HEIGHT_CLIENT);
+        }
+        if(client.getWeight() != null) {
+            values.put(KEY_WEIGHT_CLIENT, client.getWeight());
+        }else {
+            values.putNull(KEY_WEIGHT_CLIENT);
+        }
+        if(!isStringNullOrEmpty(client.getPhone())) {
+            values.put(KEY_PHONE, client.getPhone());
+        }else {
+            values.putNull(KEY_PHONE);
+        }
+        if(!isStringNullOrEmpty(client.getEmail())) {
+            values.put(KEY_EMAIL, client.getEmail());
+        }else {
+            values.putNull(KEY_EMAIL);
+        }
         values.put(KEY_TYPE, Client.CLIENT_TYPE_CLIENT);
 
         int clientId = (int)db.insert(TABLE_CLIENTS, null, values);
@@ -254,17 +291,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_FIRST_NAME, client.getFirstName());
         values.put(KEY_LAST_NAME, client.getLastName());
-        values.put(KEY_BIRTH_DATE, dateToString(client.getBirthDate()));
-        values.put(KEY_HEIGHT_CLIENT, client.getHeight());
-        values.put(KEY_WEIGHT_CLIENT, client.getWeight());
-        values.put(KEY_PHONE, client.getPhone());
-        values.put(KEY_EMAIL, client.getEmail());
+        if(client.getBirthDate() != null) {
+            values.put(KEY_BIRTH_DATE, dateToString(client.getBirthDate()));
+        }else{
+            values.putNull(KEY_BIRTH_DATE);
+        }
+        if(client.getHeight() != null) {
+            values.put(KEY_HEIGHT_CLIENT, client.getHeight());
+        }else {
+            values.putNull(KEY_HEIGHT_CLIENT);
+        }
+        if(client.getWeight() != null) {
+            values.put(KEY_WEIGHT_CLIENT, client.getWeight());
+        }else {
+            values.putNull(KEY_WEIGHT_CLIENT);
+        }
+        if(!isStringNullOrEmpty(client.getPhone())) {
+            values.put(KEY_PHONE, client.getPhone());
+        }else {
+            values.putNull(KEY_PHONE);
+        }
+        if(!isStringNullOrEmpty(client.getEmail())) {
+            values.put(KEY_EMAIL, client.getEmail());
+        }else {
+            values.putNull(KEY_EMAIL);
+        }
         values.put(KEY_TYPE, Client.CLIENT_TYPE_CLIENT);
 
         db.update(TABLE_CLIENTS, values, KEY_ID_CLIENT + " = ?",
                 new String[]{String.valueOf(client.getId())});
     }
 
+    @Deprecated
     public void deleteClient(int clientId){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -311,12 +369,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ClientStats result = new ClientStats();
                 result.setId(c.getInt(c.getColumnIndex(KEY_ID_CLIENT_STATS)));
                 result.setClientId(c.getInt(c.getColumnIndex(KEY_STATS_CLIENT_ID)));
-                result.setWeight(c.getFloat(c.getColumnIndex(KEY_WEIGHT_STATS)));
-                result.setMaxBackSquat(c.getInt(c.getColumnIndex(KEY_MAX_BACK_SQUAT)));
-                result.setMaxFrontSquat(c.getInt(c.getColumnIndex(KEY_MAX_FRONT_SQUAT)));
-                result.setMaxDeadlift(c.getInt(c.getColumnIndex(KEY_MAX_DEADLIFT)));
-                result.setMaxBenchpress(c.getInt(c.getColumnIndex(KEY_MAX_BENCHPRESS)));
-                result.setMaxShoulderspress(c.getInt(c.getColumnIndex(KEY_MAX_SHOULDERSPRESS)));
+                if(!c.isNull(c.getColumnIndex(KEY_WEIGHT_STATS))) {
+                    result.setWeight(c.getFloat(c.getColumnIndex(KEY_WEIGHT_STATS)));
+                }
+
+                if(!c.isNull(c.getColumnIndex(KEY_MAX_BACK_SQUAT))) {
+                    result.setMaxBackSquat(c.getInt(c.getColumnIndex(KEY_MAX_BACK_SQUAT)));
+                }
+
+                if(!c.isNull(c.getColumnIndex(KEY_MAX_FRONT_SQUAT))) {
+                    result.setMaxFrontSquat(c.getInt(c.getColumnIndex(KEY_MAX_FRONT_SQUAT)));
+                }
+
+                if(!c.isNull(c.getColumnIndex(KEY_MAX_DEADLIFT))) {
+                    result.setMaxDeadlift(c.getInt(c.getColumnIndex(KEY_MAX_DEADLIFT)));
+                }
+
+                if(!c.isNull(c.getColumnIndex(KEY_MAX_BENCHPRESS))) {
+                    result.setMaxBenchpress(c.getInt(c.getColumnIndex(KEY_MAX_BENCHPRESS)));
+                }
+
+                if(!c.isNull(c.getColumnIndex(KEY_MAX_SHOULDERSPRESS))) {
+                    result.setMaxShoulderspress(c.getInt(c.getColumnIndex(KEY_MAX_SHOULDERSPRESS)));
+                }
                 result.setDate(parseStringToDate(c.getString(c.getColumnIndex(KEY_DATE_STATS))));
 
                 results.add(result);
@@ -331,12 +406,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_STATS_CLIENT_ID, clientStats.getClientId());
-        values.put(KEY_WEIGHT_STATS, clientStats.getWeight());
-        values.put(KEY_MAX_BACK_SQUAT, clientStats.getMaxBackSquat());
-        values.put(KEY_MAX_FRONT_SQUAT, clientStats.getMaxFrontSquat());
-        values.put(KEY_MAX_DEADLIFT, clientStats.getMaxDeadlift());
-        values.put(KEY_MAX_BENCHPRESS, clientStats.getMaxBenchpress());
-        values.put(KEY_MAX_SHOULDERSPRESS, clientStats.getMaxShoulderspress());
+        if(clientStats.getWeight() != null) {
+            values.put(KEY_WEIGHT_STATS, clientStats.getWeight());
+        }else {
+            values.putNull(KEY_WEIGHT_STATS);
+        }
+        if(clientStats.getMaxBackSquat() != null) {
+            values.put(KEY_MAX_BACK_SQUAT, clientStats.getMaxBackSquat());
+        }else {
+            values.putNull(KEY_MAX_BACK_SQUAT);
+        }
+        if(clientStats.getMaxFrontSquat() != null) {
+            values.put(KEY_MAX_FRONT_SQUAT, clientStats.getMaxFrontSquat());
+        }else {
+            values.putNull(KEY_MAX_FRONT_SQUAT);
+        }
+        if(clientStats.getMaxDeadlift() != null) {
+            values.put(KEY_MAX_DEADLIFT, clientStats.getMaxDeadlift());
+        }else {
+            values.putNull(KEY_MAX_DEADLIFT);
+        }
+        if(clientStats.getMaxBenchpress() != null) {
+            values.put(KEY_MAX_BENCHPRESS, clientStats.getMaxBenchpress());
+        }else {
+            values.putNull(KEY_MAX_BENCHPRESS);
+        }
+        if(clientStats.getMaxShoulderspress() != null) {
+            values.put(KEY_MAX_SHOULDERSPRESS, clientStats.getMaxShoulderspress());
+        }else {
+            values.putNull(KEY_MAX_SHOULDERSPRESS);
+        }
         values.put(KEY_DATE_STATS, dateToString(new Date()));
 
         int clientStatsId = (int)db.insert(TABLE_CLIENT_STATS, null, values);
@@ -350,12 +449,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_STATS_CLIENT_ID, clientStats.getClientId());
-        values.put(KEY_WEIGHT_STATS, clientStats.getWeight());
-        values.put(KEY_MAX_BACK_SQUAT, clientStats.getMaxBackSquat());
-        values.put(KEY_MAX_FRONT_SQUAT, clientStats.getMaxFrontSquat());
-        values.put(KEY_MAX_DEADLIFT, clientStats.getMaxDeadlift());
-        values.put(KEY_MAX_BENCHPRESS, clientStats.getMaxBenchpress());
-        values.put(KEY_MAX_SHOULDERSPRESS, clientStats.getMaxShoulderspress());
+        if(clientStats.getWeight() != null) {
+            values.put(KEY_WEIGHT_STATS, clientStats.getWeight());
+        }else {
+            values.putNull(KEY_WEIGHT_STATS);
+        }
+        if(clientStats.getMaxBackSquat() != null) {
+            values.put(KEY_MAX_BACK_SQUAT, clientStats.getMaxBackSquat());
+        }else {
+            values.putNull(KEY_MAX_BACK_SQUAT);
+        }
+        if(clientStats.getMaxFrontSquat() != null) {
+            values.put(KEY_MAX_FRONT_SQUAT, clientStats.getMaxFrontSquat());
+        }else {
+            values.putNull(KEY_MAX_FRONT_SQUAT);
+        }
+        if(clientStats.getMaxDeadlift() != null) {
+            values.put(KEY_MAX_DEADLIFT, clientStats.getMaxDeadlift());
+        }else {
+            values.putNull(KEY_MAX_DEADLIFT);
+        }
+        if(clientStats.getMaxBenchpress() != null) {
+            values.put(KEY_MAX_BENCHPRESS, clientStats.getMaxBenchpress());
+        }else {
+            values.putNull(KEY_MAX_BENCHPRESS);
+        }
+        if(clientStats.getMaxShoulderspress() != null) {
+            values.put(KEY_MAX_SHOULDERSPRESS, clientStats.getMaxShoulderspress());
+        }else {
+            values.putNull(KEY_MAX_SHOULDERSPRESS);
+        }
         values.put(KEY_DATE_STATS, dateToString(clientStats.getDate()));
 
         db.update(TABLE_CLIENT_STATS, values, KEY_ID_CLIENT_STATS + " = ? ",
@@ -478,9 +601,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do{
                 Exercise result = new Exercise();
                 result.setId(c.getInt(c.getColumnIndex(KEY_ID_EXERCISES)));
-                result.setExercise(c.getString(c.getColumnIndex(KEY_EXERCISE_EXERCISES)));
+                if(!c.isNull(c.getColumnIndex(KEY_EXERCISE_EXERCISES))) {
+                    result.setExercise(c.getString(c.getColumnIndex(KEY_EXERCISE_EXERCISES)));
+                }
                 result.setClientWorkoutId(c.getInt(c.getColumnIndex(KEY_CLIENT_WORKOUT_ID)));
-                result.setDescription(c.getString(c.getColumnIndex(KEY_DESCRIPTION)));
+                if(!c.isNull(c.getColumnIndex(KEY_DESCRIPTION))) {
+                    result.setDescription(c.getString(c.getColumnIndex(KEY_DESCRIPTION)));
+                }
 
                 results.add(result);
             }while(c.moveToNext());
@@ -493,9 +620,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_EXERCISE_EXERCISES, exercise.getExercise());
+        if(!isStringNullOrEmpty(exercise.getExercise())) {
+            values.put(KEY_EXERCISE_EXERCISES, exercise.getExercise());
+        }else {
+            values.putNull(KEY_EXERCISE_EXERCISES);
+        }
         values.put(KEY_CLIENT_WORKOUT_ID, exercise.getClientWorkoutId());
-        values.put(KEY_DESCRIPTION, exercise.getDescription());
+        if(!isStringNullOrEmpty(exercise.getDescription())) {
+            values.put(KEY_DESCRIPTION, exercise.getDescription());
+        }else {
+            values.putNull(KEY_DESCRIPTION);
+        }
 
         int exerciseId = (int)db.insert(TABLE_EXERCISES, null, values);
         exercise.setId((exerciseId));
@@ -507,9 +642,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_EXERCISE_EXERCISES, exercise.getExercise());
+        if(!isStringNullOrEmpty(exercise.getExercise())) {
+            values.put(KEY_EXERCISE_EXERCISES, exercise.getExercise());
+        }else {
+            values.putNull(KEY_EXERCISE_EXERCISES);
+        }
         values.put(KEY_CLIENT_WORKOUT_ID, exercise.getClientWorkoutId());
-        values.put(KEY_DESCRIPTION, exercise.getDescription());
+        if(!isStringNullOrEmpty(exercise.getDescription())) {
+            values.put(KEY_DESCRIPTION, exercise.getDescription());
+        }else {
+            values.putNull(KEY_DESCRIPTION);
+        }
 
         db.update(TABLE_EXERCISES, values, KEY_EXERCISE_ID + " = ?",
                 new String[]{String.valueOf(exercise.getId())});
@@ -559,11 +702,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Set result = new Set();
                 result.setId(c.getInt(c.getColumnIndex(KEY_ID_SETS)));
-                result.setExerciseId(c.getInt(c.getColumnIndex(KEY_EXERCISE_ID)));
-                result.setExercise(c.getString(c.getColumnIndex(KEY_EXERCISE_SETS)));
+                if(!c.isNull(c.getColumnIndex(KEY_EXERCISE_ID))) {
+                    result.setExerciseId(c.getInt(c.getColumnIndex(KEY_EXERCISE_ID)));
+                }
+                if(!c.isNull(c.getColumnIndex(KEY_EXERCISE_SETS))) {
+                    result.setExercise(c.getString(c.getColumnIndex(KEY_EXERCISE_SETS)));
+                }
                 result.setSets(c.getInt(c.getColumnIndex(KEY_SETS)));
                 result.setReps(c.getInt(c.getColumnIndex(KEY_REPS)));
-                result.setWeight(c.getInt(c.getColumnIndex(KEY_WEIGHT_SETS)));
+                if(!c.isNull(c.getColumnIndex(KEY_WEIGHT_SETS))) {
+                    result.setWeight(c.getInt(c.getColumnIndex(KEY_WEIGHT_SETS)));
+                }
 
                 results.add(result);
             }while (c.moveToNext());
@@ -581,10 +730,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }else {
             values.putNull(KEY_EXERCISE_ID);
         }
-        values.put(KEY_EXERCISE_SETS, set.getExercise());
+        if(!isStringNullOrEmpty(set.getExercise())) {
+            values.put(KEY_EXERCISE_SETS, set.getExercise());
+        }else {
+            values.putNull(KEY_EXERCISE_SETS);
+        }
         values.put(KEY_SETS, set.getSets());
         values.put(KEY_REPS, set.getReps());
-        values.put(KEY_WEIGHT_SETS, set.getWeight());
+        if(set.getWeight() != null) {
+            values.put(KEY_WEIGHT_SETS, set.getWeight());
+        }else {
+            values.putNull(KEY_WEIGHT_SETS);
+        }
 
         int setId = (int)db.insert(TABLE_SETS, null, values);
         set.setId(setId);
@@ -601,10 +758,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }else {
             values.putNull(KEY_EXERCISE_ID);
         }
-        values.put(KEY_EXERCISE_SETS, set.getExercise());
+        if(!isStringNullOrEmpty(set.getExercise())) {
+            values.put(KEY_EXERCISE_SETS, set.getExercise());
+        }else {
+            values.putNull(KEY_EXERCISE_SETS);
+        }
         values.put(KEY_SETS, set.getSets());
         values.put(KEY_REPS, set.getReps());
-        values.put(KEY_WEIGHT_SETS, set.getWeight());
+        if(set.getWeight() != null) {
+            values.put(KEY_WEIGHT_SETS, set.getWeight());
+        }else {
+            values.putNull(KEY_WEIGHT_SETS);
+        }
 
         db.update(TABLE_SETS, values, KEY_ID_SETS + " = ?",
                 new String[]{String.valueOf(set.getId())});
