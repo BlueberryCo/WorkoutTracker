@@ -1,4 +1,4 @@
-package com.database;
+package blueberryco.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,20 +7,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.entities.Client;
-import com.entities.ClientStats;
-import com.entities.ClientWorkout;
-import com.entities.Exercise;
-import com.entities.Set;
-import com.entities.Util;
+import blueberryco.entities.Client;
+import blueberryco.entities.ClientStats;
+import blueberryco.entities.ClientWorkout;
+import blueberryco.entities.Exercise;
+import blueberryco.entities.Set;
+import blueberryco.entities.Util;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by boiko on 12/1/2015.

@@ -1,4 +1,4 @@
-package com.entities;
+package blueberryco.entities;
 
 import android.util.Log;
 

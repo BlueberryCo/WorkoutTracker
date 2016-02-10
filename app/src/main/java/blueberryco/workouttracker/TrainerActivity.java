@@ -1,13 +1,13 @@
-package com.workouttracker;
+package blueberryco.workouttracker;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class WorkoutDetailsActivity extends AppCompatActivity {
+public class TrainerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_workout_details);
+        setContentView(R.layout.activity_trainer);
     }
 }

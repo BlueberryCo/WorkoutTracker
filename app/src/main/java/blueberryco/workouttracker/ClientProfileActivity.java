@@ -1,4 +1,4 @@
-package com.workouttracker;
+package blueberryco.workouttracker;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.workouttracker;
+package blueberryco.workouttracker;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

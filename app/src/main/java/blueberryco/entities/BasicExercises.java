@@ -1,4 +1,4 @@
-package com.entities;
+package blueberryco.entities;
 
 import java.util.HashMap;
 import java.util.Map;
