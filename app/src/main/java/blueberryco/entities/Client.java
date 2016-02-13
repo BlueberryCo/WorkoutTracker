@@ -1,4 +1,4 @@
-package com.entities;
+package blueberryco.entities;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -59,7 +59,7 @@ public class Client implements Serializable {
         this.birthDate = birthDate;
     }
 
-    public float getHeight(){
+    public Float getHeight(){
         return this.height;
     }
 
@@ -67,7 +67,7 @@ public class Client implements Serializable {
         this.height = height;
     }
 
-    public float getWeight(){
+    public Float getWeight(){
         return this.weight;
     }
 

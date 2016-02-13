@@ -1,4 +1,4 @@
-package com.entities;
+package blueberryco.entities;
 
 import java.io.Serializable;
 
@@ -14,7 +14,7 @@ public class Set implements Serializable {
     private String exercise;
     private int sets;
     private int reps;
-    private int weight;
+    private Integer weight;
 
     public Set(){
 
@@ -60,11 +60,11 @@ public class Set implements Serializable {
         this.reps = reps;
     }
 
-    public int getWeight() {
+    public Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(Integer weight) {
         this.weight = weight;
     }
 }

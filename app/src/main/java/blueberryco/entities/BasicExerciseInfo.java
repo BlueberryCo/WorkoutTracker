@@ -1,18 +1,21 @@
-package com.entities;
+package blueberryco.entities;
 
 /**
  * Created by boiko on 25-Jan-16.
  */
-public class CategoryInfo {
+public class BasicExerciseInfo {
 
     private String bgTranslation;
     private String enTranslation;
+    private CategoryInfo category;
 
 
-    public CategoryInfo(String bgTranslation, String enTranslation){
+    public BasicExerciseInfo(String bgTranslation, String enTranslation, CategoryInfo category){
         this.bgTranslation = bgTranslation;
         this.enTranslation = enTranslation;
+        this.category = category;
     }
+
 
     public String getBgTranslation() {
         return bgTranslation;
@@ -28,5 +31,13 @@ public class CategoryInfo {
 
     public void setEnTranslation(String enTranslation) {
         this.enTranslation = enTranslation;
+    }
+
+    public CategoryInfo getCategory(){
+        return this.category;
+    }
+
+    public void setCategory(CategoryInfo category){
+        this.category = category;
     }
 }
