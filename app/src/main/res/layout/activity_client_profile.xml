@@ -10,7 +10,7 @@
     android:weightSum="1"
     tools:context=".ClientProfileActivity">
 
-    <com.workouttracker.CalendarView
+    <blueberryco.workouttracker.CalendarView
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

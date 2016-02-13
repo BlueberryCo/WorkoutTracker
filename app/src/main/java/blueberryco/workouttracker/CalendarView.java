@@ -1,4 +1,4 @@
-package com.workouttracker;
+package blueberryco.workouttracker;
 
 import android.content.Context;
 import android.content.res.TypedArray;
