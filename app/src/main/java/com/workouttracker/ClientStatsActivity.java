@@ -1,9 +1,9 @@
 package com.workouttracker;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 
-public class ClientStatsActivity extends AppCompatActivity {
+public class ClientStatsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
