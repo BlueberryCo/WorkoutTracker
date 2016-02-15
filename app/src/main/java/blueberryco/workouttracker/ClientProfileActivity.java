@@ -32,9 +32,9 @@ public class ClientProfileActivity extends Activity {
             @Override
             public void onDayLongPress(Date date)
             {
-                // show returned day
+                // show returned day ---> tuk chete ot bazata za izbranq den
                 DateFormat df = SimpleDateFormat.getDateInstance();
-                Toast.makeText(ClientProfileActivity.this, df.format(date), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClientProfileActivity.this, df.format(date)+ " eto tuka ima ama mnogo rabota :)", Toast.LENGTH_SHORT).show();
             }
         });
     }

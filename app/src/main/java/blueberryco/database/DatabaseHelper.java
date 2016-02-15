@@ -7,16 +7,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import blueberryco.entities.Client;
 import blueberryco.entities.ClientStats;
 import blueberryco.entities.ClientWorkout;
 import blueberryco.entities.Exercise;
 import blueberryco.entities.Set;
 import blueberryco.entities.Util;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by boiko on 12/1/2015.
@@ -106,13 +106,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             " INTEGER," + KEY_MAX_DEADLIFT + " INTEGER," + KEY_MAX_BENCHPRESS + " INTEGER," +
             KEY_MAX_SHOULDERSPRESS + " INTEGER," + KEY_DATE_STATS + " DATETIME," +
             "FOREIGN KEY(" + KEY_STATS_CLIENT_ID + ") REFERENCES " + TABLE_CLIENTS + "(" + KEY_ID_CLIENT +
-            ");";
+            "));";
 
     private static final String CREATE_TABLE_CLIENT_WORKOUT = "CREATE TABLE " + TABLE_CLIENT_WORKOUT +
             "(" + KEY_ID_CLIENT_WORKOUT + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_CLIENT_WORKOUT_CLIENT_ID +
             " INTEGER," + KEY_DATE_CLIENT_WORKOUT + " DATETIME," + KEY_IS_FINISHED + " INTEGER,"
             + "FOREIGN KEY(" + KEY_CLIENT_WORKOUT_CLIENT_ID +
-            ") REFERENCES " + TABLE_CLIENTS + "(" + KEY_ID_CLIENT + ");";
+            ") REFERENCES " + TABLE_CLIENTS + "(" + KEY_ID_CLIENT + "));";
 
     private static final String CREATE_TABLE_WOD = "CREATE TABLE " + TABLE_WORKOUT_OF_THE_DAY +
             "(" + KEY_ID_WOD + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_DATE_WOD + " DATETIME," + KEY_CONTENT_WOD +
@@ -124,12 +124,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_EXERCISES = "CREATE TABLE " + TABLE_EXERCISES + "(" + KEY_ID_EXERCISES + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             KEY_EXERCISE_EXERCISES + " TEXT," + KEY_CLIENT_WORKOUT_ID + " INTEGER," + KEY_DESCRIPTION + " TEXT," +
-            "FOREIGN KEY(" + KEY_CLIENT_WORKOUT_ID + ") REFERENCES " + TABLE_CLIENT_WORKOUT + "(" + KEY_ID_CLIENT_WORKOUT + ");";
+            "FOREIGN KEY(" + KEY_CLIENT_WORKOUT_ID + ") REFERENCES " + TABLE_CLIENT_WORKOUT + "(" + KEY_ID_CLIENT_WORKOUT + "));";
 
     private static final String CREATE_TABLE_SETS = "CREATE TABLE " + TABLE_SETS + "(" + KEY_ID_SETS +
             " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_EXERCISE_ID + " INTEGER," + KEY_EXERCISE_SETS + " TEXT," + KEY_SETS + " INTEGER, " +
             KEY_REPS + " INTEGER," + KEY_WEIGHT_SETS + " INTEGER," + "FOREIGN KEY(" + KEY_EXERCISE_ID + ") REFERENCES " + TABLE_EXERCISES + "(" +
-            KEY_ID_EXERCISES + ");";
+            KEY_ID_EXERCISES + "));";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -138,13 +138,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        Log.d("1-> ", CREATE_TABLE_CLIENTS);
         db.execSQL(CREATE_TABLE_CLIENTS);
+
+        Log.d("2-> ", CREATE_TABLE_CLIENT_STATS);
         db.execSQL(CREATE_TABLE_CLIENT_STATS);
+
+        Log.i("3-> ", CREATE_TABLE_CLIENT_WORKOUT);
         db.execSQL(CREATE_TABLE_CLIENT_WORKOUT);
+
+        Log.i("4-> ", CREATE_TABLE_WOD);
         db.execSQL(CREATE_TABLE_WOD);
+
+        Log.i("5-> ", CREATE_TABLE_DRAFT_TRAINING_PROGRAMS);
         db.execSQL(CREATE_TABLE_DRAFT_TRAINING_PROGRAMS);
+
+        Log.i("6-> ", CREATE_TABLE_EXERCISES);
         db.execSQL(CREATE_TABLE_EXERCISES);
+
+        Log.i("7-> ", CREATE_TABLE_SETS);
         db.execSQL(CREATE_TABLE_SETS);
+
     }
 
     @Override
