@@ -1,7 +1,11 @@
 package blueberryco.entities;
 
+import android.content.Context;
+
 import java.io.Serializable;
 import java.util.Date;
+
+import blueberryco.database.DatabaseHelper;
 
 /**
  * Created by boiko on 12/1/2015.
@@ -97,5 +101,18 @@ public class Client implements Serializable {
 
     public void setType(int type){
         this.type = type;
+    }
+
+    @Override
+    public String toString(){
+        return this.firstName + " " + this.lastName;
+    }
+
+    public static boolean hasOwner(Context context){
+        DatabaseHelper helper = new DatabaseHelper(context);
+
+        Client owner = helper.getOwner();
+
+        return owner != null;
     }
 }

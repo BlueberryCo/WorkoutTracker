@@ -3,10 +3,14 @@ package blueberryco.workouttracker;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import blueberryco.database.DatabaseHelper;
+import blueberryco.entities.Client;
 
 public class MainActivity extends Activity {
 
@@ -14,6 +18,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //checkHasOwner(); //If owner is already created redirect to TrainerActivity
         bindElements();
     }
 
@@ -27,8 +32,48 @@ public class MainActivity extends Activity {
                 startActivity(intent);
 
             }
-        });}
+        });
 
+        Button btnNewUser = (Button) findViewById(R.id.btnNewUser);
+        btnNewUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(), CreateOwnerActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnSync = (Button) findViewById(R.id.btnSync);
+        btnSync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                testCreateClient();
+            }
+        });
+    }
+
+    private void checkHasOwner(){
+        if(Client.hasOwner(this.getApplicationContext())){
+
+            Intent intent = new Intent(getApplicationContext(), TrainerActivity.class);
+            startActivity(intent);
+
+            this.finish();
+        }
+    }
+
+    private void testCreateClient(){
+        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+
+        Client client = new Client();
+        client.setFirstName("Георги");
+        client.setLastName("Дончев");
+
+        db.createClient(client);
+
+        Log.i("INSERT USER", client.getId().toString());
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

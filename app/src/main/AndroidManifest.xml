@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="blueberryco.workouttracker.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,13 +16,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="blueberryco.workouttracker.ClientProfileActivity" >
+        <activity android:name=".ClientProfileActivity" >
         </activity>
-        <activity android:name="blueberryco.workouttracker.ClientStatsActivity" >
+        <activity android:name=".ClientStatsActivity" >
         </activity>
-        <activity android:name="blueberryco.workouttracker.TrainerActivity" >
+        <activity android:name=".TrainerActivity" >
         </activity>
-        <activity android:name="blueberryco.workouttracker.WorkoutDetailsActivity" >
+        <activity android:name=".WorkoutDetailsActivity" >
+        </activity>
+        <activity
+            android:name=".CreateOwnerActivity"
+            android:label="@string/title_activity_create_owner" >
         </activity>
     </application>
 
