@@ -1,10 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="blueberryco.workouttracker.TrainerActivity">
 
-</RelativeLayout>
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:shrinkColumns="*"
+        android:stretchColumns="*">
+
+
+        <!-- Row 2 with 3 columns -->
+
+
+        <TableRow
+            android:id="@+id/tr1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/ibAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="100dip"
+                android:background="@null"
+                android:padding="5dip"
+                android:scaleType="fitXY"
+                android:src="@drawable/menu_add" />
+
+            <ImageButton
+                android:id="@+id/ibProgram"
+                android:layout_width="wrap_content"
+                android:layout_height="100dip"
+                android:background="@null"
+                android:padding="5dip"
+                android:scaleType="fitXY"
+                android:src="@drawable/menu_program" />
+
+            <ImageButton
+                android:id="@+id/ibWOD"
+                android:layout_width="wrap_content"
+                android:layout_height="100dip"
+                android:background="@null"
+                android:padding="5dip"
+                android:scaleType="fitXY"
+                android:src="@drawable/menu_wod" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/ibSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="100dip"
+                android:background="@null"
+                android:padding="5dip"
+                android:scaleType="fitXY"
+                android:src="@drawable/menu_settings" />
+
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>
