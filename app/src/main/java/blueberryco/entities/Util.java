@@ -19,6 +19,10 @@ public final class Util {
         throw new AssertionError("Cannot have instance of utility class.");
     }
 
+
+    public static String DATE_FORMAT = "dd-MM-yyyy";
+    public static String DATE_TIME_FORMAT = "YYYY-MM-DD HH:MM:SS.SSS";
+
     public static Date parseStringToDate(String input){
         DateFormat format = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS.SSS", Locale.ENGLISH);
         try {

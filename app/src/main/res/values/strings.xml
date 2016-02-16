@@ -12,4 +12,15 @@
     <string name="new_user_button">нов съм</string>
     <string name="existing_user_button">синхронизация</string>
     <string name="title_activity_create_owner">CreateOwnerActivity</string>
+    <string name="i_am_trainer">Аз съм треньор</string>
+    <string name="first_name">Име</string>
+    <string name="last_name">Фамилия</string>
+    <string name="more_information">Попълни повече сега</string>
+    <string name="information_label">Информация за мен</string>
+    <string name="save">Запази</string>
+    <string name="birth_date">Дата на раждане</string>
+    <string name="height">Височина</string>
+    <string name="weight">Тегло</string>
+    <string name="phone">Телефон</string>
+    <string name="email">Имейл</string>
 </resources>
