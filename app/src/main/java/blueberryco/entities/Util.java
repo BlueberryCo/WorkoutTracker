@@ -20,11 +20,12 @@ public final class Util {
     }
 
 
-    public static String DATE_FORMAT = "dd-MM-yyyy";
-    public static String DATE_TIME_FORMAT = "YYYY-MM-DD HH:MM:SS.SSS";
+    public static final String DATE_FORMAT = "dd-MM-yyyy";
+    public static final String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm:ss";
+    public static final String EMPTY_STRING = "";
 
     public static Date parseStringToDate(String input){
-        DateFormat format = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS.SSS", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat(DATE_TIME_FORMAT, Locale.ENGLISH);
         try {
             return  format.parse(input);
         } catch (ParseException e) {
@@ -35,7 +36,7 @@ public final class Util {
     }
 
     public static String dateToString(Date input){
-        DateFormat format = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS.SSS", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat(DATE_TIME_FORMAT, Locale.ENGLISH);
         return format.format(input);
     }
 
@@ -46,5 +47,9 @@ public final class Util {
         }
 
         return false;
+    }
+
+    public static String floatToString(Float input){
+        return String.valueOf(input);
     }
 }

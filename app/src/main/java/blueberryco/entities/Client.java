@@ -103,6 +103,14 @@ public class Client implements Serializable {
         this.type = type;
     }
 
+    public String birthDateAsString(){
+        if(this.birthDate != null){
+            return Util.dateToString(this.birthDate);
+        }
+
+        return Util.EMPTY_STRING;
+    }
+
     @Override
     public String toString(){
         return this.firstName + " " + this.lastName;
