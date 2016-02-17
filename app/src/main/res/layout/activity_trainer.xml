@@ -14,16 +14,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
+        android:gravity="center"
+        android:padding="15dp"
         android:shrinkColumns="*"
         android:stretchColumns="*">
 
 
         <!-- Row 2 with 3 columns -->
+        <TableRow
+            android:id="@+id/tr1Labels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/tvAddIconLabel"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="#d3d3d3"
+                android:gravity="center"
+                android:padding="5dip"
+                android:text="@string/tvLabelAddIcon"
+                android:textColor="#000000" />
+
+
+            <TextView
+                android:id="@+id/tvClientIconLabel"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="#d3d3d3"
+                android:gravity="center"
+                android:padding="5dip"
+                android:text="@string/tvLabelClientsIcon"
+                android:textColor="#000000" />
+        </TableRow>
 
         <TableRow
             android:id="@+id/tr1"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageButton
@@ -32,17 +59,61 @@
                 android:layout_height="100dip"
                 android:background="@null"
                 android:padding="5dip"
-                android:scaleType="fitXY"
+                android:scaleType="center"
                 android:src="@drawable/menu_add" />
 
             <ImageButton
-                android:id="@+id/ibProgram"
+                android:id="@+id/ibClients"
                 android:layout_width="wrap_content"
                 android:layout_height="100dip"
                 android:background="@null"
                 android:padding="5dip"
-                android:scaleType="fitXY"
-                android:src="@drawable/menu_program" />
+                android:scaleType="center"
+                android:src="@drawable/menu_clients" />
+
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr2Labels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvCalendarIconLabel"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="#d3d3d3"
+                android:gravity="center"
+                android:padding="5dip"
+                android:text="@string/tvLabelCalendarIcon"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/tvWODIconLabel"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="#d3d3d3"
+                android:gravity="center"
+                android:padding="5dip"
+                android:text="@string/tvLabelWODIcon"
+                android:textColor="#000000" />
+        </TableRow>
+
+
+        <TableRow
+            android:id="@+id/tr2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/ibCalendar"
+                android:layout_width="wrap_content"
+                android:layout_height="100dip"
+                android:background="@null"
+                android:padding="5dip"
+                android:scaleType="center"
+                android:src="@drawable/menu_calendar" />
 
             <ImageButton
                 android:id="@+id/ibWOD"
@@ -50,28 +121,64 @@
                 android:layout_height="100dip"
                 android:background="@null"
                 android:padding="5dip"
-                android:scaleType="fitXY"
+                android:scaleType="center"
                 android:src="@drawable/menu_wod" />
+
 
         </TableRow>
 
         <TableRow
-            android:id="@+id/tableRow1"
+            android:id="@+id/tr3Labels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvProgramsIconLabel"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="#d3d3d3"
+                android:gravity="center"
+                android:padding="5dip"
+                android:text="@string/tvLabelProgramIcon"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/tvInfoIconLabel"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="#d3d3d3"
+                android:gravity="center"
+                android:padding="5dip"
+                android:text="@string/tvLabelInfoIcon"
+                android:textColor="#000000" />
+        </TableRow>
+
+
+        <TableRow
+            android:id="@+id/tr3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
             <ImageButton
-                android:id="@+id/ibSettings"
+                android:id="@+id/ibProgram"
                 android:layout_width="wrap_content"
                 android:layout_height="100dip"
                 android:background="@null"
                 android:padding="5dip"
-                android:scaleType="fitXY"
-                android:src="@drawable/menu_settings" />
+                android:scaleType="center"
+                android:src="@drawable/menu_program" />
 
+            <ImageButton
+                android:id="@+id/ibInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="100dip"
+                android:background="@null"
+                android:padding="5dip"
+                android:scaleType="center"
+                android:src="@drawable/menu_info" />
 
         </TableRow>
-
     </TableLayout>
 
 </LinearLayout>

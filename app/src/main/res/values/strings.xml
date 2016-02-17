@@ -23,4 +23,10 @@
     <string name="weight">Тегло</string>
     <string name="phone">Телефон</string>
     <string name="email">Имейл</string>
+    <string name="tvLabelAddIcon">Add Client</string>
+    <string name="tvLabelClientsIcon">Clients</string>
+    <string name="tvLabelCalendarIcon">Schedule</string>
+    <string name="tvLabelWODIcon">WOD</string>
+    <string name="tvLabelProgramIcon">Ready Programs</string>
+    <string name="tvLabelInfoIcon">Info</string>
 </resources>

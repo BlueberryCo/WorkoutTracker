@@ -16,7 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ClientProfileActivity" >
+        <activity android:name=".ClientScheduleActivity" >
         </activity>
         <activity android:name=".ClientStatsActivity" >
         </activity>
@@ -27,6 +27,12 @@
         <activity
             android:name=".CreateOwnerActivity"
             android:label="@string/title_activity_create_owner" >
+        </activity>
+        <activity android:name=".ClientsActivity" >
+        </activity>
+        <activity android:name=".BasicExercisesAcivity" >
+        </activity>
+        <activity android:name=".InfoActivity" >
         </activity>
     </application>
 

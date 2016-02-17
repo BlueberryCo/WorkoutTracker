@@ -13,8 +13,10 @@ import android.widget.Toast;
 public class TrainerActivity extends Activity {
     ImageButton ibAdd;
     ImageButton ibProgram;
-    ImageButton ibSetting;
+    ImageButton ibInfo;
     ImageButton ibWOD;
+    ImageButton ibClients;
+    ImageButton ibCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +25,17 @@ public class TrainerActivity extends Activity {
 
         ibAdd = (ImageButton) findViewById(R.id.ibAdd);
         ibProgram = (ImageButton) findViewById(R.id.ibProgram);
-        ibSetting = (ImageButton) findViewById(R.id.ibSettings);
+        ibInfo = (ImageButton) findViewById(R.id.ibInfo);
         ibWOD = (ImageButton) findViewById(R.id.ibWOD);
+        ibClients = (ImageButton) findViewById(R.id.ibClients);
+        ibCalendar = (ImageButton) findViewById(R.id.ibCalendar);
 
-        ibSetting.setOnClickListener(oclBtn);
+        ibInfo.setOnClickListener(oclBtn);
         ibAdd.setOnClickListener(oclBtn);
         ibWOD.setOnClickListener(oclBtn);
         ibProgram.setOnClickListener(oclBtn);
+        ibClients.setOnClickListener(oclBtn);
+        ibCalendar.setOnClickListener(oclBtn);
 
     }
 
@@ -49,25 +55,36 @@ public class TrainerActivity extends Activity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.ibAdd:
-                        Toast.makeText(TrainerActivity.this, "Button 1 pressed ", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), ClientProfileActivity.class);
+                        Toast.makeText(TrainerActivity.this, "Button CreateOwnerActivity ", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), CreateOwnerActivity.class);
                         startActivity(intent);
                         break;
-                    case R.id.ibProgram:
-                        Toast.makeText(TrainerActivity.this, "Button 2 pressed ", Toast.LENGTH_SHORT).show();
-                        Intent intentibProgram = new Intent(getApplicationContext(), WorkoutDetailsActivity.class);
-                        startActivity(intentibProgram);
+                    case R.id.ibClients:
+                        Toast.makeText(TrainerActivity.this, "Button ClientsActivity", Toast.LENGTH_SHORT).show();
+                        Intent intentibClients = new Intent(getApplicationContext(), ClientsActivity.class);
+                        startActivity(intentibClients);
                         break;
-                    case R.id.ibSettings:
-                        Toast.makeText(TrainerActivity.this, "Button 3 pressed ", Toast.LENGTH_SHORT).show();
-                        Intent intentibSettings = new Intent(getApplicationContext(), ClientStatsActivity.class);
-                        startActivity(intentibSettings);
+                    case R.id.ibCalendar:
+                        Toast.makeText(TrainerActivity.this, "Button ClientScheduleActivity ", Toast.LENGTH_SHORT).show();
+                        Intent intentibCalendar = new Intent(getApplicationContext(), ClientScheduleActivity.class);
+                        startActivity(intentibCalendar);
                         break;
                     case R.id.ibWOD:
-                        Toast.makeText(TrainerActivity.this, "Button 4 pressed ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TrainerActivity.this, "Button WorkoutDetailsActivity wod of trainer ", Toast.LENGTH_SHORT).show();
                         Intent intentibWOD = new Intent(getApplicationContext(), WorkoutDetailsActivity.class);
                         startActivity(intentibWOD);
                         break;
+                    case R.id.ibProgram:
+                        Toast.makeText(TrainerActivity.this, "Button BasicExercisesAcivity", Toast.LENGTH_SHORT).show();
+                        Intent intentibProgram = new Intent(getApplicationContext(), BasicExercisesAcivity.class);
+                        startActivity(intentibProgram);
+                        break;
+                    case R.id.ibInfo:
+                        Toast.makeText(TrainerActivity.this, "Button InfoActivity ", Toast.LENGTH_SHORT).show();
+                        Intent intentibInfo = new Intent(getApplicationContext(), InfoActivity.class);
+                        startActivity(intentibInfo);
+                        break;
+
                 }
             }
         };

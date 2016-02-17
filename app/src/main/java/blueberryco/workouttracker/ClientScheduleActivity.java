@@ -11,14 +11,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 
-public class ClientProfileActivity extends Activity {
+public class ClientScheduleActivity extends Activity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_client_profile);
+        setContentView(R.layout.activity_clients_schedule);
 
         HashSet<Date> events = new HashSet<>();
         events.add(new Date());
@@ -34,7 +34,7 @@ public class ClientProfileActivity extends Activity {
             {
                 // show returned day ---> tuk chete ot bazata za izbranq den
                 DateFormat df = SimpleDateFormat.getDateInstance();
-                Toast.makeText(ClientProfileActivity.this, df.format(date)+ " eto tuka ima ama mnogo rabota :)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClientScheduleActivity.this, df.format(date)+ " eto tuka ima ama mnogo rabota :)", Toast.LENGTH_SHORT).show();
             }
         });
     }
