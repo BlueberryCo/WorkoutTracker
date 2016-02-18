@@ -255,8 +255,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return results;
     }
 
-    public Client createClient(Client client){
+    public Client createClient(Client client) throws OwnerExistsException{
         SQLiteDatabase db = this.getWritableDatabase();
+
+        if(client.getType() == Client.CLIENT_TYPE_OWNER && getOwner() != null){
+            throw new OwnerExistsException("The owner already exists!");
+        }
 
         ContentValues values = new ContentValues();
         values.put(KEY_FIRST_NAME, client.getFirstName());
@@ -286,7 +290,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }else {
             values.putNull(KEY_EMAIL);
         }
-        values.put(KEY_TYPE, Client.CLIENT_TYPE_CLIENT);
+        values.put(KEY_TYPE, client.getType());
 
         int clientId = (int)db.insert(TABLE_CLIENTS, null, values);
 
@@ -325,7 +329,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }else {
             values.putNull(KEY_EMAIL);
         }
-        values.put(KEY_TYPE, Client.CLIENT_TYPE_CLIENT);
+        values.put(KEY_TYPE, client.getType());
 
         db.update(TABLE_CLIENTS, values, KEY_ID_CLIENT + " = ?",
                 new String[]{String.valueOf(client.getId())});

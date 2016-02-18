@@ -1,6 +1,8 @@
 package blueberryco.entities;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -112,14 +114,38 @@ public class BasicExercises {
         return result;
     }
 
-    public static final Map<Integer, CategoryInfo> getCategoriesMap(){
+    public static Map<Integer, CategoryInfo> getCategoriesMap(){
         Map<Integer, CategoryInfo> result = new HashMap<>(5);
 
-        result.put(BARBELL_MOVES, new CategoryInfo("Базови с щанга", "Barbell moves"));
-        result.put(GYMNASTIC_MOVES, new CategoryInfo("Базови със собствено тегло", "Bodyweight  moves"));
-        result.put(OLYMPIC_MOVES, new CategoryInfo("Олимпииски движения", "Olympic moves"));
-        result.put(CARDIO_MOVES, new CategoryInfo("Метаболитни", "Cardio moves"));
-        result.put(OTHER, new CategoryInfo("Други", "Other"));
+        result.put(BARBELL_MOVES, new CategoryInfo(BARBELL_MOVES, "Базови с щанга", "Barbell moves"));
+        result.put(GYMNASTIC_MOVES, new CategoryInfo(GYMNASTIC_MOVES, "Базови със собствено тегло", "Bodyweight  moves"));
+        result.put(OLYMPIC_MOVES, new CategoryInfo(OLYMPIC_MOVES, "Олимпииски движения", "Olympic moves"));
+        result.put(CARDIO_MOVES, new CategoryInfo(CARDIO_MOVES, "Метаболитни", "Cardio moves"));
+        result.put(OTHER, new CategoryInfo(OTHER, "Други", "Other"));
+
+        return result;
+    }
+
+    public static List<CategoryInfo> getAllCategories(){
+
+        List<CategoryInfo> result = new ArrayList<>();
+
+        for(Map.Entry<Integer, CategoryInfo> entry : getCategoriesMap().entrySet()){
+            result.add(entry.getValue());
+        }
+
+        return result;
+    }
+
+    public static List<BasicExerciseInfo> getExercisesForCategory(int category){
+
+        List<BasicExerciseInfo> result = new ArrayList<>();
+
+        for(Map.Entry<Integer, BasicExerciseInfo> entry : getExercisesMap().entrySet()){
+            if(entry.getValue().getCategory().getId() == category){
+                result.add(entry.getValue());
+            }
+        }
 
         return result;
     }

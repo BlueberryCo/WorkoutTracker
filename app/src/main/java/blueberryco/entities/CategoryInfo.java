@@ -5,13 +5,23 @@ package blueberryco.entities;
  */
 public class CategoryInfo {
 
+    private int id;
     private String bgTranslation;
     private String enTranslation;
 
 
-    public CategoryInfo(String bgTranslation, String enTranslation){
+    public CategoryInfo(int id, String bgTranslation, String enTranslation){
+        this.id = id;
         this.bgTranslation = bgTranslation;
         this.enTranslation = enTranslation;
+    }
+
+    public int getId(){
+        return this.id;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public String getBgTranslation() {

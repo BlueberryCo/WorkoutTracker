@@ -113,7 +113,14 @@ public class Client implements Serializable {
 
     @Override
     public String toString(){
-        return this.firstName + " " + this.lastName;
+        return
+                "First name: " + firstName
+                +"Last name: " + lastName
+                +"Birth date: " + Util.dateToString(birthDate)
+                +"Height: " + String.valueOf(height)
+                +"Weight: " + String.valueOf(weight)
+                +"Phone: " + phone
+                +"Email: " + email;
     }
 
     public static boolean hasOwner(Context context){

@@ -1,9 +1,11 @@
 package blueberryco.workouttracker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -14,15 +16,21 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import blueberryco.database.DatabaseHelper;
+import blueberryco.database.OwnerExistsException;
 import blueberryco.entities.Client;
 import blueberryco.entities.Util;
 
 public class CreateOwnerActivity extends Activity {
+
+    private static final String LOG = "CreateOwnerActivity";
 
     private DatePickerDialog birthDateDialog;
     private CheckBox cbxTrainer;
@@ -130,10 +138,69 @@ public class CreateOwnerActivity extends Activity {
             return;
         }
 
-        if(hasClient()){
-
-        }else {
+        if(!hasClient()){
             client = new Client();
+        }
+
+        client.setFirstName(etFirstName.getText().toString());
+        client.setLastName(etLastName.getText().toString());
+
+        if(!Util.isNullOrEmptyString(etBirthDate.getText().toString())){
+            if(dateFormatter == null) {
+                dateFormatter = new SimpleDateFormat(Util.DATE_FORMAT, Locale.US);
+            }
+
+            try {
+                client.setBirthDate(dateFormatter.parse(etBirthDate.getText().toString()));
+            } catch (ParseException e) {
+                Log.e(LOG, e.getStackTrace().toString());
+            }
+        }
+
+        if(!Util.isNullOrEmptyString(etHeight.getText().toString())){
+            client.setHeight(Float.valueOf(etHeight.getText().toString()));
+        }
+
+        if(!Util.isNullOrEmptyString(etWeight.getText().toString())){
+            client.setWeight(Float.valueOf(etWeight.getText().toString()));
+        }
+
+        if(!Util.isNullOrEmptyString(etPhone.getText().toString())){
+            client.setPhone(etPhone.getText().toString());
+        }
+
+        if(!Util.isNullOrEmptyString((etEmail.getText().toString()))){
+            client.setEmail(etEmail.getText().toString());
+        }
+
+        if(isCreateOwner){
+            client.setType(Client.CLIENT_TYPE_OWNER);
+        }else {
+            client.setType(Client.CLIENT_TYPE_CLIENT);
+        }
+
+        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+
+        if(hasClient()){
+            db.updateClient(client);
+        }else {
+            try{
+                db.createClient(client);
+                Toast.makeText(this, "Създаден успешно!", Toast.LENGTH_SHORT).show();
+            } catch (OwnerExistsException e){
+                final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                alertDialog.setTitle("Грешка!");
+                alertDialog.setMessage("Потребител от този тип вече е създаден!");
+                alertDialog.setButton(0, "OK", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.cancel();
+                    }
+                });
+                alertDialog.show();
+            }
+
         }
     }
 
@@ -154,6 +221,7 @@ public class CreateOwnerActivity extends Activity {
         birthDateDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
                 etBirthDate.setText(dateFormatter.format(newDate.getTime()));

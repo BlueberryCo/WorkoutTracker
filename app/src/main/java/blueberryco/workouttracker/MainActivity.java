@@ -40,6 +40,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(getApplicationContext(), CreateOwnerActivity.class);
+                intent.putExtra(CreateOwnerActivity.IS_CREATE_OWNER_KEY, true);
                 startActivity(intent);
             }
         });
@@ -48,7 +49,11 @@ public class MainActivity extends Activity {
         btnSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                testCreateClient();
+                DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                Client owner = db.getOwner();
+                Intent intent = new Intent(getApplicationContext(), CreateOwnerActivity.class);
+                intent.putExtra(CreateOwnerActivity.EXISTING_CLIENT_KEY, owner);
+                startActivity(intent);
             }
         });
     }
@@ -61,18 +66,6 @@ public class MainActivity extends Activity {
 
             this.finish();
         }
-    }
-
-    private void testCreateClient(){
-        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-
-        Client client = new Client();
-        client.setFirstName("Георги");
-        client.setLastName("Дончев");
-
-        db.createClient(client);
-
-        Log.i("INSERT USER", client.getId().toString());
     }
 
     @Override
