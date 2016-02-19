@@ -3,7 +3,6 @@ package blueberryco.workouttracker;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,11 +22,13 @@ public class MainActivity extends Activity {
     }
 
     public void bindElements(){
+
         Button bLoginTest = (Button) findViewById(R.id.button);
         bLoginTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                db.initialLoad();
                 Intent intent = new Intent(getApplicationContext(), TrainerActivity.class);
                 startActivity(intent);
 
