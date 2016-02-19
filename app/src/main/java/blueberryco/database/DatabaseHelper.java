@@ -137,7 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
      public void initialLoad() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "select count(*) as nb  from draft_training_programs;";
+        String query = "select count(*) as nb  from client_workout;";
         Cursor res = db.rawQuery(query, null);
         int count = 0;
 
@@ -145,9 +145,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.d("1-> "," prediiii");
             count = res.getInt(res.getColumnIndex("nb"));
             Log.d("res.getInt(1)-> ", res.getColumnIndex("nb")+"");
-            if (count > 0) {
-                String insertClient1 = "insert into clients values (3,'Ivan','Ivanov',strftime('%Y-%m-%d %H:%M:%f', '1991-03-01 13:01:01.123'),167,60,'021155221','ivan@ivanov.bg',1);";
-                String insertClient2 = "insert into clients values (4,'Maq','Ivanova',strftime('%Y-%m-%d %H:%M:%f', '1989-03-09 13:01:01.123'),165,55,'0877445588','maq@ivanova.bg',1);";
+            if (count == 0) {
+                String insertClient1 = "insert into clients values (3,'Ivan','Ivanov',strftime('%Y-%m-%d %H:%M:%f', '1991-03-01 13:01:01.123'),167,60,'021155221','ivan@ivanov.bg',2);";
+                String insertClient2 = "insert into clients values (4,'Maq','Ivanova',strftime('%Y-%m-%d %H:%M:%f', '1989-03-09 13:01:01.123'),165,55,'0877445588','maq@ivanova.bg',2);";
                 String insClientStat1 = "insert into client_stats values (5,3,60,50,20,25,20,35,strftime('%Y-%m-%d %H:%M:%f', '2016-01-09 13:01:01.123'));";
                 String insClientStat2 = "insert into client_stats values (6,3,55,25,20,25,20,35,strftime('%Y-%m-%d %H:%M:%f', '2016-01-20 13:01:01.123'));";
                 String insWork1 = "insert into client_workout values (5,3,strftime('%Y-%m-%d %H:%M:%f', '2016-02-10 13:01:01.123'),1);";
