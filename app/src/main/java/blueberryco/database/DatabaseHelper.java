@@ -135,30 +135,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-     public void initialLoad() {
+    public void initialLoad() {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "select count(*) as nb  from client_workout;";
         Cursor res = db.rawQuery(query, null);
         int count = 0;
 
         if (res.moveToFirst()) {
-            Log.d("1-> "," prediiii");
+            Log.d("1-> ", " Start insert initial data");
             count = res.getInt(res.getColumnIndex("nb"));
-            Log.d("res.getInt(1)-> ", res.getColumnIndex("nb")+"");
+            Log.d("res.getInt(1)-> ", res.getColumnIndex("nb") + "");
             if (count == 0) {
-                String insertClient1 = "insert into clients values (3,'Ivan','Ivanov',strftime('%Y-%m-%d %H:%M:%f', '1991-03-01 13:01:01.123'),167,60,'021155221','ivan@ivanov.bg',2);";
-                String insertClient2 = "insert into clients values (4,'Maq','Ivanova',strftime('%Y-%m-%d %H:%M:%f', '1989-03-09 13:01:01.123'),165,55,'0877445588','maq@ivanova.bg',2);";
-                String insClientStat1 = "insert into client_stats values (5,3,60,50,20,25,20,35,strftime('%Y-%m-%d %H:%M:%f', '2016-01-09 13:01:01.123'));";
-                String insClientStat2 = "insert into client_stats values (6,3,55,25,20,25,20,35,strftime('%Y-%m-%d %H:%M:%f', '2016-01-20 13:01:01.123'));";
-                String insWork1 = "insert into client_workout values (5,3,strftime('%Y-%m-%d %H:%M:%f', '2016-02-10 13:01:01.123'),1);";
-                String insWork11 = "insert into client_workout values (6,3,strftime('%Y-%m-%d %H:%M:%f', '2016-02-18 13:01:01.123'),1);";
-                String insWork2 = "insert into client_workout values (7,4,strftime('%Y-%m-%d %H:%M:%f', '2016-01-10 13:01:01.123'),1);";
-                String insWork22 = "insert into client_workout values (8,4,strftime('%Y-%m-%d %H:%M:%f', '2016-01-18 13:01:01.123'),1);";
-                String insEx1="insert into exercises values (9,1,6,'първа тренировка');";
+                String insertClient1 = "insert into clients values (3,'Иван','Иванов', '19-03-1989 13:01:01',167,60,'021155221','ivan@ivanov.bg',2);";
+                String insertClient2 = "insert into clients values (4,'Мая','Манолова', '15-03-1978 13:01:01',165,55,'0877445588','maq@manolova.bg',2);";
+                String insClientStat1 = "insert into client_stats values (5,3,60,50,20,25,20,35, '20-01-2016 13:01:01');";
+                String insClientStat2 = "insert into client_stats values (6,3,55,25,20,25,20,35,'26-01-2016 13:01:01');";
+                String insWork1 = "insert into client_workout values (5,3,'10-02-2016 13:01:01',1);";
+                String insWork11 = "insert into client_workout values (6,3, '20-02-2016 13:01:01',1);";
+                String insWork2 = "insert into client_workout values (7,4,'21-01-2016 13:01:01',1);";
+                String insWork22 = "insert into client_workout values (8,4,'26-02-2016 13:01:01',1);";
+                String insEx1 = "insert into exercises values (9,1,6,'първа тренировка');";
                 String insEx11 = "insert into exercises values (11,6,6,'първа тренировка')";
-                String insEx2="insert into exercises values (10,2,7,'първа тренировка');";
-                String insSets1="insert into sets values (3,9,1,5,10,15);";
-                String insSets11="insert into sets values (4,11,6,7,10,15);";
+                String insEx2 = "insert into exercises values (10,2,7,'първа тренировка');";
+                String insSets1 = "insert into sets values (3,9,1,5,10,15);";
+                String insSets11 = "insert into sets values (4,11,6,7,10,15);";
                 db.execSQL(insertClient1);
                 db.execSQL(insertClient2);
                 db.execSQL(insClientStat1);
@@ -173,11 +173,55 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.execSQL(insSets1);
                 db.execSQL(insSets11);
 
-                Log.d("2-> ", " sled");
+                Log.d("2-> ", " Finish inserting initial data");
             }
         }
 
 
+    }
+
+    public List<Client> getAllClientsWorkoutForDate(String  date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ;
+//select * from client_workout  join clients  on
+// client_workout.ClientId =clients.Id where client_workout.Date between '20-02-2016 00:00:01' and '20-02-2016 23:01:01'
+        String query = "SELECT * FROM " + TABLE_CLIENTS + " JOIN " + TABLE_CLIENT_WORKOUT
+                + "  ON client_workout.ClientId =clients.Id  WHERE client_workout." +
+                KEY_DATE_CLIENT_WORKOUT + " between '" + date + " 00:00:00' and '" + date+" 23:59:59'";
+        Log.d("query -> ", query);
+
+        List<Client> results = new ArrayList<>();
+
+        Cursor c = db.rawQuery(query, null);
+
+        if (c.moveToFirst()) {
+            do {
+                Client result = new Client();
+                result.setId(c.getInt(c.getColumnIndex(KEY_ID_CLIENT)));
+                result.setFirstName(c.getString(c.getColumnIndex(KEY_FIRST_NAME)));
+                result.setLastName(c.getString(c.getColumnIndex(KEY_LAST_NAME)));
+                if (!c.isNull(c.getColumnIndex(KEY_BIRTH_DATE))) {
+                    result.setBirthDate(parseStringToDate(c.getString(c.getColumnIndex(KEY_BIRTH_DATE))));
+                }
+                if (!c.isNull(c.getColumnIndex(KEY_HEIGHT_CLIENT))) {
+                    result.setHeight(c.getFloat(c.getColumnIndex(KEY_HEIGHT_CLIENT)));
+                }
+                if (!c.isNull(c.getColumnIndex(KEY_WEIGHT_CLIENT))) {
+                    result.setWeight(c.getFloat(c.getColumnIndex(KEY_WEIGHT_CLIENT)));
+                }
+                if (!c.isNull(c.getColumnIndex(KEY_PHONE))) {
+                    result.setPhone(c.getString(c.getColumnIndex(KEY_PHONE)));
+                }
+                if (!c.isNull(c.getColumnIndex(KEY_EMAIL))) {
+                    result.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
+                }
+                result.setType(Client.CLIENT_TYPE_CLIENT);
+
+                results.add(result);
+            } while (c.moveToNext());
+        }
+
+        return results;
     }
 
     @Override

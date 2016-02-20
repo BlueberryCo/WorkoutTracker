@@ -210,6 +210,7 @@ public class CalendarView extends LinearLayout {
             // today
             Date today = new Date();
 
+
             // inflate item if it does not exist yet
             if (view == null)
                 view = inflater.inflate(R.layout.control_calendar_day, parent, false);
