@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,8 @@ public class CalendarView extends LinearLayout {
 
     //event handling
     private EventHandler eventHandler = null;
+    HashSet<Date> evDates = new HashSet<>();
+
 
     // internal components
     private LinearLayout header;
@@ -47,6 +50,7 @@ public class CalendarView extends LinearLayout {
     private ImageView btnNext;
     private TextView txtDate;
     private GridView grid;
+    //private int colorForTextView;
 
     // seasons' rainbow
     int[] rainbow = new int[]{
@@ -77,6 +81,7 @@ public class CalendarView extends LinearLayout {
      * Load control xml layout
      */
     private void initControl(Context context, AttributeSet attrs) {
+        Log.d(LOGTAG, " initControl ");
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.control_calendar, this);
 
@@ -93,8 +98,9 @@ public class CalendarView extends LinearLayout {
         try {
             // try to load provided date format, and fallback to default otherwise
             dateFormat = ta.getString(R.styleable.CalendarView_dateFormat);
-            if (dateFormat == null)
+            if (dateFormat == null) {
                 dateFormat = DATE_FORMAT;
+            }
         } finally {
             ta.recycle();
         }
@@ -147,13 +153,14 @@ public class CalendarView extends LinearLayout {
      * Display dates correctly in grid
      */
     public void updateCalendar() {
-        updateCalendar(null);
+        updateCalendar(evDates);
     }
 
     /**
      * Display dates correctly in grid
      */
     public void updateCalendar(HashSet<Date> events) {
+        evDates = events;
         ArrayList<Date> cells = new ArrayList<>();
         Calendar calendar = (Calendar) currentDate.clone();
 
@@ -168,8 +175,10 @@ public class CalendarView extends LinearLayout {
         while (cells.size() < DAYS_COUNT) {
             cells.add(calendar.getTime());
             calendar.add(Calendar.DAY_OF_MONTH, 1);
+
         }
 
+        Log.d(LOGTAG, " update grid ");
         // update grid
         grid.setAdapter(new CalendarAdapter(getContext(), cells, events));
 
@@ -181,12 +190,19 @@ public class CalendarView extends LinearLayout {
         int month = currentDate.get(Calendar.MONTH);
         int season = monthSeason[month];
         int color = rainbow[season];
-
+        // colorForTextView = color;
         header.setBackgroundColor(getResources().getColor(color));
+
+
     }
 
+    // public int getColorForTextView (){
+    //    return  colorForTextView;
+    // }
 
     private class CalendarAdapter extends ArrayAdapter<Date> {
+
+        private static final String LOGTAG = "CalendarAdapter";
         // days with events
         private HashSet<Date> eventDays;
 
@@ -196,6 +212,7 @@ public class CalendarView extends LinearLayout {
         public CalendarAdapter(Context context, ArrayList<Date> days, HashSet<Date> eventDays) {
             super(context, R.layout.control_calendar_day, days);
             this.eventDays = eventDays;
+            Log.d(LOGTAG, " eventDays" + eventDays);
             inflater = LayoutInflater.from(context);
         }
 
@@ -210,7 +227,6 @@ public class CalendarView extends LinearLayout {
             // today
             Date today = new Date();
 
-
             // inflate item if it does not exist yet
             if (view == null)
                 view = inflater.inflate(R.layout.control_calendar_day, parent, false);
@@ -223,7 +239,10 @@ public class CalendarView extends LinearLayout {
                             eventDate.getMonth() == month &&
                             eventDate.getYear() == year) {
                         // mark this day for event
-                        view.setBackgroundResource(R.drawable.reminder);
+                        ((TextView) view).setTypeface(null, Typeface.BOLD);
+                        ((TextView) view).setTextColor(getResources().getColor(R.color.today));
+                        //view.setBackgroundResource(R.drawable.reminder);
+                        view.setBackgroundColor(getResources().getColor(R.color.winter));
                         break;
                     }
                 }

@@ -20,19 +20,24 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/winter"
-        android:padding="5dp"
         android:layout_centerHorizontal="true"
-        android:text="Клиенти за деня"
+        android:background="@color/greyed_out"
+        android:padding="5dp"
+        android:textColor="#ffffff"
+
         android:textSize="20sp" />
+
     <TextView
         android:id="@+id/tvNoClientsForDay"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:padding="5dp"
         android:layout_centerHorizontal="true"
+        android:background="@color/greyed_out"
+        android:padding="5dp"
+        android:textColor="#ffffff"
         android:textSize="20sp" />
+
     <ListView
         android:id="@+id/lvClientsCal"
         android:layout_width="match_parent"

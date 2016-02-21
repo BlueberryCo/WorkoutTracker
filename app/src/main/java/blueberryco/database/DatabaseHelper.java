@@ -142,18 +142,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int count = 0;
 
         if (res.moveToFirst()) {
-            Log.d("1-> ", " Start insert initial data");
             count = res.getInt(res.getColumnIndex("nb"));
-            Log.d("res.getInt(1)-> ", res.getColumnIndex("nb") + "");
             if (count == 0) {
-                String insertClient1 = "insert into clients values (3,'Иван','Иванов', '19-03-1989 13:01:01',167,60,'021155221','ivan@ivanov.bg',2);";
-                String insertClient2 = "insert into clients values (4,'Мая','Манолова', '15-03-1978 13:01:01',165,55,'0877445588','maq@manolova.bg',2);";
-                String insClientStat1 = "insert into client_stats values (5,3,60,50,20,25,20,35, '20-01-2016 13:01:01');";
-                String insClientStat2 = "insert into client_stats values (6,3,55,25,20,25,20,35,'26-01-2016 13:01:01');";
-                String insWork1 = "insert into client_workout values (5,3,'10-02-2016 13:01:01',1);";
-                String insWork11 = "insert into client_workout values (6,3, '20-02-2016 13:01:01',1);";
-                String insWork2 = "insert into client_workout values (7,4,'21-01-2016 13:01:01',1);";
-                String insWork22 = "insert into client_workout values (8,4,'26-02-2016 13:01:01',1);";
+                Log.d(LOG, " Start insert initial data");
+                String insertClient1 = "insert into clients values (3,'Иван','Иванов', '1989-03-19 13:01:01',167,60,'021155221','ivan@ivanov.bg',2);";
+                String insertClient2 = "insert into clients values (4,'Мая','Манолова', '1978-03-08 13:01:01',165,55,'0877445588','maq@manolova.bg',2);";
+                String insClientStat1 = "insert into client_stats values (5,3,60,50,20,25,20,35, '2016-01-26 13:01:01');";
+                String insClientStat2 = "insert into client_stats values (6,3,55,25,20,25,20,35,'2016-01-20 13:01:01');";
+                String insWork1 = "insert into client_workout values (5,3,'2016-02-20 13:01:01',1);";
+                String insWork11 = "insert into client_workout values (6,3, '2016-02-21 13:01:01',1);";
+                String insWork2 = "insert into client_workout values (7,4,'2016-01-16 13:01:01',1);";
+                String insWork22 = "insert into client_workout values (8,4,'2016-02-26 13:01:01',1);";
                 String insEx1 = "insert into exercises values (9,1,6,'първа тренировка');";
                 String insEx11 = "insert into exercises values (11,6,6,'първа тренировка')";
                 String insEx2 = "insert into exercises values (10,2,7,'първа тренировка');";
@@ -173,22 +172,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.execSQL(insSets1);
                 db.execSQL(insSets11);
 
-                Log.d("2-> ", " Finish inserting initial data");
+                Log.d(LOG, " Finish inserting initial data");
             }
         }
-
-
+        db.close();
     }
 
-    public List<Client> getAllClientsWorkoutForDate(String  date) {
+    public List<String> getWorkoutDays() {
         SQLiteDatabase db = this.getReadableDatabase();
-        ;
-//select * from client_workout  join clients  on
-// client_workout.ClientId =clients.Id where client_workout.Date between '20-02-2016 00:00:01' and '20-02-2016 23:01:01'
+        String query = "select distinct date(Date) as dayWO from " + TABLE_CLIENT_WORKOUT;
+        Log.d(LOG, " getWorkoutDays query->" + query);
+        List<String> results = new ArrayList<>();
+
+        Cursor c = db.rawQuery(query, null);
+
+        if (c.moveToFirst()) {
+            do {
+                String result = new String();
+                if (!c.isNull(c.getColumnIndex("dayWO"))) {
+                    result = c.getString(c.getColumnIndex("dayWO"));
+                }
+                results.add(result);
+            } while (c.moveToNext());
+        }
+        db.close();
+        return results;
+    }
+
+    public List<Client> getAllClientsWorkoutForDate(String date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
         String query = "SELECT * FROM " + TABLE_CLIENTS + " JOIN " + TABLE_CLIENT_WORKOUT
                 + "  ON client_workout.ClientId =clients.Id  WHERE client_workout." +
-                KEY_DATE_CLIENT_WORKOUT + " between '" + date + " 00:00:00' and '" + date+" 23:59:59'";
-        Log.d("query -> ", query);
+                KEY_DATE_CLIENT_WORKOUT + " between '" + date + " 00:00:00' and '" + date + " 23:59:59'";
+        Log.d(LOG, " getAllClientsWorkoutForDate query->" + query);
 
         List<Client> results = new ArrayList<>();
 
@@ -220,7 +237,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 results.add(result);
             } while (c.moveToNext());
         }
-
+        db.close();
         return results;
     }
 

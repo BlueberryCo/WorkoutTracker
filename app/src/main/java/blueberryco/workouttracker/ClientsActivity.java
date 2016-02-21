@@ -16,47 +16,52 @@ import blueberryco.database.DatabaseHelper;
 import blueberryco.entities.Client;
 
 public class ClientsActivity extends Activity {
-
+    private static final String LOG = "ClientsActivity";
 
     ListView dataList;
+
     ArrayList<Client> alClients;
+    List<Client> lClients;
+
+    DatabaseHelper db;
+    CustomAdapterClients adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clients);
-        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
 
-        Log.d("Call get clients: ", " --------1------");
-        CustomAdapterClients adapter;
-        List<Client> lClients = db.getAllClients();
-        Log.d("lClients  ", lClients.get(0).getFirstName());
+        db = new DatabaseHelper(getApplicationContext());
+
+        assignUiElements();
+        loadListClients();
+
+    }
+
+    private void assignUiElements() {
+        dataList = (ListView) findViewById(R.id.lvClients);
+    }
+
+    private void loadListClients() {
+        lClients = db.getAllClients();
 
         alClients = new ArrayList<Client>();
 
         for (Client cn : lClients) {
-            String log = "ID:" + cn.getId() + " Name: " + cn.getFirstName()
+            String log = " ID:" + cn.getId() + " Name: " + cn.getFirstName()
                     + " ,LastName: " + cn.getLastName();
-
-
-            Log.d("Result: ", log);
+            Log.d(LOG, log);
             alClients.add(cn);
 
         }
 
         adapter = new CustomAdapterClients(this,
                 alClients);
-        dataList = (ListView) findViewById(R.id.lvClients);
         dataList.setAdapter(adapter);
-
-
         dataList.setOnItemClickListener(new OnItemClickListener() {
-
-
                                             @Override
                                             public void onItemClick(AdapterView<?> parent, View view, int position,
                                                                     long id) {
-
                                                 String member_name = alClients.get(position).getFirstName();
                                                 Toast.makeText(getApplicationContext(), "" + member_name,
                                                         Toast.LENGTH_SHORT).show();
@@ -64,6 +69,6 @@ public class ClientsActivity extends Activity {
                                         }
 
         );
-
     }
+
 }
