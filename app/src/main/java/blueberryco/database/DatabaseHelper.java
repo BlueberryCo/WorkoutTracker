@@ -284,6 +284,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return Util.isNullOrEmptyString(input);
     }
 
+    public static String getMainDatabaseName(){
+        return DATABASE_NAME;
+    }
+
     //region Client methods
 
     public Client getOwner() {
