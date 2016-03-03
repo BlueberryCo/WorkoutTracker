@@ -26,7 +26,7 @@ import blueberryco.entities.Client;
 public class ClientScheduleActivity extends Activity {
 
     private static final String LOGTAG = "ClientScheduleActivity";
-
+    public static final String CLIENT_KEY = "clientt";
     DateFormat df;
     DateFormat dfDataBase;
     Date selectedDate;
@@ -43,6 +43,8 @@ public class ClientScheduleActivity extends Activity {
     DatabaseHelper db;
     CustomAdapterClients adapter;
 
+    private Client cl = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,13 @@ public class ClientScheduleActivity extends Activity {
 
     private void getWODays() {
         HashSet<Date> events = new HashSet<>();
-        evDates = db.getWorkoutDays();
+        int ClientId;
+        // klienti za tazi data
+        if (cl != null) {
+            ClientId = cl.getId();
+        } else
+            ClientId = 0;
+        evDates = db.getWorkoutDays(ClientId);
         Log.d(LOGTAG, " Dates from db " + events);
 
         for (String stringDate : evDates) {
@@ -90,6 +98,15 @@ public class ClientScheduleActivity extends Activity {
     }
 
     private void assignUiElements() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.containsKey(CLIENT_KEY)) {
+                cl = (Client) extras.getSerializable(CLIENT_KEY);
+                Log.d(LOGTAG, "cl: " + cl.getFirstName());
+            }
+        }
+
+
         db = new DatabaseHelper(getApplicationContext());
         df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         dfDataBase = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
@@ -102,14 +119,21 @@ public class ClientScheduleActivity extends Activity {
 
     public void loadClientForDay(Date date) {
 
-        Log.d(LOGTAG, "formatirane yyyy-MM-dd " + date);
+        Log.d(LOGTAG, "format yyyy-MM-dd " + date);
         String dat = df.format(date);
-
+        int ClientId;
+        String name = null;
         Log.d(LOGTAG, " " + dat);
         // klienti za tazi data
-        lClients = db.getAllClientsWorkoutForDate(dat);
-        tvDayWorkout.setText("Клиенти за " + dfDataBase.format(date));
-
+        if (cl != null) {
+            ClientId = cl.getId();
+            name = cl.getFirstName();
+            tvDayWorkout.setText("Тренировки на " +cl.getFirstName()+" за "+ dfDataBase.format(date));
+        } else {
+            ClientId = 0;
+            tvDayWorkout.setText("Клиенти за "+ dfDataBase.format(date));
+        }
+        lClients = db.getAllClientsWorkoutForDate(dat, ClientId);
         if (lClients != null && lClients.size() != 0) {
             emptyClientList.setText("");
             alClients = new ArrayList<Client>();
@@ -140,7 +164,12 @@ public class ClientScheduleActivity extends Activity {
 
         } else {
             String log = "Няма клиенти";
-            emptyClientList.setText(log);
+
+            if (name != null) {
+                emptyClientList.setText("");
+            } else {
+                emptyClientList.setText(log);
+            }
 
             alClients = new ArrayList<Client>();
             adapter = new CustomAdapterClients(ClientScheduleActivity.this,

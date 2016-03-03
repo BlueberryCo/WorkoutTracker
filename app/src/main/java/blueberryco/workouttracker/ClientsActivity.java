@@ -1,6 +1,7 @@
 package blueberryco.workouttracker;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ import blueberryco.entities.Client;
 
 public class ClientsActivity extends Activity {
     private static final String LOG = "ClientsActivity";
+
 
     ListView dataList;
 
@@ -65,6 +67,13 @@ public class ClientsActivity extends Activity {
                                                 String member_name = alClients.get(position).getFirstName();
                                                 Toast.makeText(getApplicationContext(), "" + member_name,
                                                         Toast.LENGTH_SHORT).show();
+
+                                                Client cl = alClients.get(position);
+                                                Intent intent = new Intent(getApplicationContext(), ClientScheduleActivity.class);
+                                                intent.putExtra(ClientScheduleActivity.CLIENT_KEY, cl);
+                                                startActivity(intent);
+
+
                                             }
                                         }
 

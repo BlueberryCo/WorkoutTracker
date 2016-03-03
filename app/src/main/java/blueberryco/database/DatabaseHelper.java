@@ -178,9 +178,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<String> getWorkoutDays() {
+    public List<String> getWorkoutDays(int ClientId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "select distinct date(Date) as dayWO from " + TABLE_CLIENT_WORKOUT;
+        String condition = null;
+        if(ClientId>0){
+            condition = "where ClientId= "+ ClientId;
+        }else {
+            condition= "";
+        }
+        String query = "select distinct date(Date) as dayWO from " + TABLE_CLIENT_WORKOUT +" "+condition;
         Log.d(LOG, " getWorkoutDays query->" + query);
         List<String> results = new ArrayList<>();
 
@@ -199,12 +205,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return results;
     }
 
-    public List<Client> getAllClientsWorkoutForDate(String date) {
+    public List<Client> getAllClientsWorkoutForDate(String date, int ClienId) {
         SQLiteDatabase db = this.getReadableDatabase();
-
+        String condition = null;
+if(ClienId>0){
+    condition = "and clients.Id = "+ ClienId;
+}else {
+    condition= "";
+}
         String query = "SELECT * FROM " + TABLE_CLIENTS + " JOIN " + TABLE_CLIENT_WORKOUT
                 + "  ON client_workout.ClientId =clients.Id  WHERE client_workout." +
-                KEY_DATE_CLIENT_WORKOUT + " between '" + date + " 00:00:00' and '" + date + " 23:59:59'";
+                KEY_DATE_CLIENT_WORKOUT + " between '" + date + " 00:00:00' and '" + date + " 23:59:59' "+condition;
         Log.d(LOG, " getAllClientsWorkoutForDate query->" + query);
 
         List<Client> results = new ArrayList<>();
