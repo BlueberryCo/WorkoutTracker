@@ -190,7 +190,7 @@ public class CalendarView extends LinearLayout {
             tlMenu.setVisibility(View.VISIBLE);
             bCalendar.setText("Calendar - " + cl.getFirstName());
             bProfile.setText("Profile - " + cl.getFirstName());
-            String name = cl.getFirstName();
+
         } else {
             tlMenu.setVisibility(View.GONE);
         }
