@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+
+import blueberryco.entities.Client;
 
 
 public class CalendarView extends LinearLayout {
@@ -37,7 +41,7 @@ public class CalendarView extends LinearLayout {
     private String dateFormat;
 
     // current displayed month
-    private Calendar currentDate = Calendar.getInstance();
+    private Calendar currentDate = Calendar.getInstance();//3
 
     //event handling
     private EventHandler eventHandler = null;
@@ -50,7 +54,16 @@ public class CalendarView extends LinearLayout {
     private ImageView btnNext;
     private TextView txtDate;
     private GridView grid;
-    //private int colorForTextView;
+
+
+    Button bCalendar;
+    Button bProfile;
+
+    TableLayout tlMenu;
+
+    Client cl;
+
+    private int colorForTextView;
 
     // seasons' rainbow
     int[] rainbow = new int[]{
@@ -68,19 +81,22 @@ public class CalendarView extends LinearLayout {
     }
 
     public CalendarView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(context, attrs);//0
         initControl(context, attrs);
     }
 
     public CalendarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initControl(context, attrs);
+
     }
 
     /**
      * Load control xml layout
      */
     private void initControl(Context context, AttributeSet attrs) {
+
+
         Log.d(LOGTAG, " initControl ");
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.control_calendar, this);
@@ -113,6 +129,12 @@ public class CalendarView extends LinearLayout {
         btnNext = (ImageView) findViewById(R.id.calendar_next_button);
         txtDate = (TextView) findViewById(R.id.calendar_date_display);
         grid = (GridView) findViewById(R.id.calendar_grid);
+
+        tlMenu = (TableLayout) findViewById(R.id.tlMenuForClient);
+        bCalendar = (Button) findViewById(R.id.bClientCalendar);
+        bProfile = (Button) findViewById(R.id.bClientProfile);
+
+
     }
 
     private void assignClickHandlers() {
@@ -160,6 +182,18 @@ public class CalendarView extends LinearLayout {
      * Display dates correctly in grid
      */
     public void updateCalendar(HashSet<Date> events) {
+        cl = ClientScheduleActivity.cl;
+        if (cl != null) {
+            Log.d(LOGTAG, " update grid cl" + cl.toString());
+            cl = ClientScheduleActivity.getCurrentclient();
+
+            tlMenu.setVisibility(View.VISIBLE);
+            bCalendar.setText("Calendar - " + cl.getFirstName());
+            bProfile.setText("Profile - " + cl.getFirstName());
+            String name = cl.getFirstName();
+        } else {
+            tlMenu.setVisibility(View.GONE);
+        }
         evDates = events;
         ArrayList<Date> cells = new ArrayList<>();
         Calendar calendar = (Calendar) currentDate.clone();
@@ -190,15 +224,13 @@ public class CalendarView extends LinearLayout {
         int month = currentDate.get(Calendar.MONTH);
         int season = monthSeason[month];
         int color = rainbow[season];
-        // colorForTextView = color;
         header.setBackgroundColor(getResources().getColor(color));
+        bCalendar.setBackgroundColor(getResources().getColor(color));
+        Log.d(LOGTAG, "change color");
 
 
     }
 
-    // public int getColorForTextView (){
-    //    return  colorForTextView;
-    // }
 
     private class CalendarAdapter extends ArrayAdapter<Date> {
 

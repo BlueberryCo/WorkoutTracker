@@ -6,6 +6,42 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/tlMenuForClient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:padding="5dp"
+        android:shrinkColumns="*"
+        android:stretchColumns="*">
+
+        <TableRow
+            android:id="@+id/trMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/bClientCalendar"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/tvCalendarmenu"
+                android:textColor="#000000" />
+
+
+            <Button
+                android:id="@+id/bClientProfile"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/tvClientProfile"
+                android:textColor="#000000" />
+        </TableRow>
+
+
+    </TableLayout>
+
     <!-- date toolbar -->
     <RelativeLayout
         android:layout_width="match_parent"

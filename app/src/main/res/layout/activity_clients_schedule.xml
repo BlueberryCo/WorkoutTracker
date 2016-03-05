@@ -10,6 +10,8 @@
     android:weightSum="1"
     tools:context=".ClientProfileActivity">
 
+
+
     <blueberryco.workouttracker.CalendarView
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"
@@ -21,9 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/greyed_out"
         android:padding="5dp"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
 
         android:textSize="20sp" />
 
@@ -33,9 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/greyed_out"
         android:padding="5dp"
-        android:textColor="#ffffff"
+        android:textColor="#000000"
         android:textSize="20sp" />
 
     <ListView

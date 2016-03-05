@@ -26,10 +26,11 @@ import blueberryco.entities.Client;
 public class ClientScheduleActivity extends Activity {
 
     private static final String LOGTAG = "ClientScheduleActivity";
-    public static final String CLIENT_KEY = "clientt";
+    public static final String CLIENT_KEY = "client";
     DateFormat df;
     DateFormat dfDataBase;
     Date selectedDate;
+
 
     ArrayList<Client> alClients;
     List<String> evDates;
@@ -38,22 +39,35 @@ public class ClientScheduleActivity extends Activity {
     ListView dataList;
     TextView emptyClientList;
     TextView tvDayWorkout;
+
     CalendarView cv;
 
     DatabaseHelper db;
     CustomAdapterClients adapter;
 
-    private Client cl = null;
+
+    static Client cl = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clients_schedule);
-
         assignUiElements();
+
+        if (cl != null) {
+            setCurrentClient(cl);
+        }
         getWODays();
 
+    }
+
+    public static Client getCurrentclient() {
+        return cl;
+    }
+
+    public void setCurrentClient(Client client) {
+        cl = client;
     }
 
     private void getWODays() {
@@ -62,6 +76,7 @@ public class ClientScheduleActivity extends Activity {
         // klienti za tazi data
         if (cl != null) {
             ClientId = cl.getId();
+            setCurrentClient(cl);
         } else
             ClientId = 0;
         evDates = db.getWorkoutDays(ClientId);
@@ -101,8 +116,16 @@ public class ClientScheduleActivity extends Activity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.containsKey(CLIENT_KEY)) {
-                cl = (Client) extras.getSerializable(CLIENT_KEY);
-                Log.d(LOGTAG, "cl: " + cl.getFirstName());
+                if ((Client) extras.getSerializable(CLIENT_KEY) != null) {
+                    cl = (Client) extras.getSerializable(CLIENT_KEY);
+                    setCurrentClient(cl);
+                    Log.d(LOGTAG, "cl: " + cl.getFirstName());
+                } else {
+                    cl=null;
+                    setCurrentClient(cl);
+                    Log.d(LOGTAG, "cl:nullllll");
+
+                }
             }
         }
 
@@ -115,6 +138,8 @@ public class ClientScheduleActivity extends Activity {
         emptyClientList = (TextView) findViewById(R.id.tvNoClientsForDay);
         tvDayWorkout = (TextView) findViewById(R.id.tvDayWorkout);
         cv = ((CalendarView) findViewById(R.id.calendar_view));
+        cv.updateCalendar();
+
     }
 
     public void loadClientForDay(Date date) {
@@ -127,11 +152,12 @@ public class ClientScheduleActivity extends Activity {
         // klienti za tazi data
         if (cl != null) {
             ClientId = cl.getId();
+            setCurrentClient(cl);
             name = cl.getFirstName();
-            tvDayWorkout.setText("Тренировки на " +cl.getFirstName()+" за "+ dfDataBase.format(date));
+            tvDayWorkout.setText("Тренировки");
         } else {
             ClientId = 0;
-            tvDayWorkout.setText("Клиенти за "+ dfDataBase.format(date));
+            tvDayWorkout.setText("Клиенти за " + dfDataBase.format(date));
         }
         lClients = db.getAllClientsWorkoutForDate(dat, ClientId);
         if (lClients != null && lClients.size() != 0) {
@@ -175,7 +201,7 @@ public class ClientScheduleActivity extends Activity {
             adapter = new CustomAdapterClients(ClientScheduleActivity.this,
                     alClients);
             dataList.setAdapter(adapter);
-            Log.d(LOGTAG, "nqma klineti za tozi den " + log);
+            Log.d(LOGTAG, "nqma klienti za tozi den " + log);
         }
     }
 

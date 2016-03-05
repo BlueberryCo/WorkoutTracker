@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import blueberryco.entities.Client;
+
 public class TrainerActivity extends Activity {
     ImageButton ibAdd;
     ImageButton ibProgram;
@@ -65,8 +67,11 @@ public class TrainerActivity extends Activity {
                         startActivity(intentibClients);
                         break;
                     case R.id.ibCalendar:
+
+                   Client cl =null;
                         Toast.makeText(TrainerActivity.this, "Button ClientScheduleActivity ", Toast.LENGTH_SHORT).show();
                         Intent intentibCalendar = new Intent(getApplicationContext(), ClientScheduleActivity.class);
+                        intentibCalendar.putExtra(ClientScheduleActivity.CLIENT_KEY, cl);
                         startActivity(intentibCalendar);
                         break;
                     case R.id.ibWOD:
