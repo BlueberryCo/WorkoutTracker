@@ -36,6 +36,8 @@
         </activity>
         <activity android:name=".AddWorkout" >
         </activity>
+        <activity android:name=".ClientProfile" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package blueberryco.workouttracker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -16,6 +17,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -37,11 +39,13 @@ public class CalendarView extends LinearLayout {
     // default date format
     private static final String DATE_FORMAT = "MMM yyyy";
 
+    public static int curColor;
+
     // date format
     private String dateFormat;
 
     // current displayed month
-    private Calendar currentDate = Calendar.getInstance();//3
+    private Calendar currentDate = Calendar.getInstance();
 
     //event handling
     private EventHandler eventHandler = null;
@@ -58,10 +62,14 @@ public class CalendarView extends LinearLayout {
 
     Button bCalendar;
     Button bProfile;
+    TextView tvClientName;
 
     TableLayout tlMenu;
+    TableRow trMenu;
+
 
     Client cl;
+    int color;
 
     private int colorForTextView;
 
@@ -75,6 +83,7 @@ public class CalendarView extends LinearLayout {
 
     // month-season association (northern hemisphere, sorry australia :)
     int[] monthSeason = new int[]{2, 2, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2};
+
 
     public CalendarView(Context context) {
         super(context);
@@ -131,8 +140,10 @@ public class CalendarView extends LinearLayout {
         grid = (GridView) findViewById(R.id.calendar_grid);
 
         tlMenu = (TableLayout) findViewById(R.id.tlMenuForClient);
+        trMenu = (TableRow) findViewById(R.id.trMenu);
         bCalendar = (Button) findViewById(R.id.bClientCalendar);
         bProfile = (Button) findViewById(R.id.bClientProfile);
+        tvClientName = (TextView) findViewById(R.id.tvClientNameProfile);
 
 
     }
@@ -153,6 +164,26 @@ public class CalendarView extends LinearLayout {
             public void onClick(View v) {
                 currentDate.add(Calendar.MONTH, -1);
                 updateCalendar();
+            }
+        });
+
+
+        bCalendar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext().getApplicationContext(), ClientScheduleActivity.class);
+                intent.putExtra(ClientScheduleActivity.CLIENT_KEY, cl);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().getApplicationContext().startActivity(intent);
+            }
+        });
+        bProfile.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext().getApplicationContext(), ClientProfile.class);
+                intent.putExtra(ClientProfile.CLIENT_KEY, cl);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().getApplicationContext().startActivity(intent);
             }
         });
 
@@ -184,12 +215,9 @@ public class CalendarView extends LinearLayout {
     public void updateCalendar(HashSet<Date> events) {
         cl = ClientScheduleActivity.cl;
         if (cl != null) {
-            Log.d(LOGTAG, " update grid cl" + cl.toString());
             cl = ClientScheduleActivity.getCurrentclient();
-
             tlMenu.setVisibility(View.VISIBLE);
-            bCalendar.setText("Calendar - " + cl.getFirstName());
-            bProfile.setText("Profile - " + cl.getFirstName());
+            tvClientName.setText(cl.getFirstName() + " " + cl.getLastName());
 
         } else {
             tlMenu.setVisibility(View.GONE);
@@ -223,9 +251,13 @@ public class CalendarView extends LinearLayout {
         // set header color according to current season
         int month = currentDate.get(Calendar.MONTH);
         int season = monthSeason[month];
-        int color = rainbow[season];
+        color = rainbow[season];
+        curColor = color;
         header.setBackgroundColor(getResources().getColor(color));
+       // trMenu.setBackgroundColor(getResources().getColor(color));
         bCalendar.setBackgroundColor(getResources().getColor(color));
+        bProfile.setBackgroundColor(getResources().getColor(color));
+        //tvClientName.setBackgroundColor(getResources().getColor(CalendarView.curColor));
         Log.d(LOGTAG, "change color");
 
 
@@ -274,7 +306,7 @@ public class CalendarView extends LinearLayout {
                         ((TextView) view).setTypeface(null, Typeface.BOLD);
                         ((TextView) view).setTextColor(getResources().getColor(R.color.today));
                         //view.setBackgroundResource(R.drawable.reminder);
-                        view.setBackgroundColor(getResources().getColor(R.color.winter));
+                        view.setBackgroundColor(getResources().getColor(curColor));
                         break;
                     }
                 }

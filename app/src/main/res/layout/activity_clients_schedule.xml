@@ -11,7 +11,6 @@
     tools:context=".ClientProfileActivity">
 
 
-
     <blueberryco.workouttracker.CalendarView
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"
@@ -42,5 +41,30 @@
         android:id="@+id/lvClientsCal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/rlForAddWO"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="2dp">
+
+        <ImageView
+            android:id="@+id/ivAddSymbol"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:src="@drawable/wod_small" />
+
+        <Button
+            android:id="@+id/bAddWO"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/ivAddSymbol"
+            android:paddingBottom="5dp"
+            android:textAlignment="center"
+            android:text="txt" />
+
+    </RelativeLayout>
 
 </LinearLayout>

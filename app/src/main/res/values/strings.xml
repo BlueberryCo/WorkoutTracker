@@ -31,4 +31,5 @@
     <string name="tvLabelInfoIcon">Info</string>
     <string name="tvCalendarmenu">CALENDAR</string>
     <string name="tvClientProfile">PROFILE</string>
+    <string name="tvClients">Клиенти</string>
 </resources>

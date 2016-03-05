@@ -1,13 +1,16 @@
 package blueberryco.workouttracker;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +48,9 @@ public class ClientScheduleActivity extends Activity {
     DatabaseHelper db;
     CustomAdapterClients adapter;
 
+    RelativeLayout rlAdd;
+    Button bAddWO;
+
 
     static Client cl = null;
 
@@ -55,10 +61,12 @@ public class ClientScheduleActivity extends Activity {
         setContentView(R.layout.activity_clients_schedule);
         assignUiElements();
 
+
         if (cl != null) {
             setCurrentClient(cl);
         }
         getWODays();
+        assignClickHandlers();
 
     }
 
@@ -121,7 +129,7 @@ public class ClientScheduleActivity extends Activity {
                     setCurrentClient(cl);
                     Log.d(LOGTAG, "cl: " + cl.getFirstName());
                 } else {
-                    cl=null;
+                    cl = null;
                     setCurrentClient(cl);
                     Log.d(LOGTAG, "cl:nullllll");
 
@@ -139,8 +147,21 @@ public class ClientScheduleActivity extends Activity {
         tvDayWorkout = (TextView) findViewById(R.id.tvDayWorkout);
         cv = ((CalendarView) findViewById(R.id.calendar_view));
         cv.updateCalendar();
+        rlAdd = (RelativeLayout) findViewById(R.id.rlForAddWO);
+        bAddWO= (Button) findViewById(R.id.bAddWO);
+        rlAdd.setVisibility(View.GONE);
 
     }
+    private void assignClickHandlers() {
+        // add one month and refresh UI
+        bAddWO.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AddWorkout.class);
+                startActivity(intent);
+
+            }
+        });}
 
     public void loadClientForDay(Date date) {
 
@@ -154,7 +175,7 @@ public class ClientScheduleActivity extends Activity {
             ClientId = cl.getId();
             setCurrentClient(cl);
             name = cl.getFirstName();
-            tvDayWorkout.setText("Тренировки");
+            tvDayWorkout.setText("Тренировка за " + dfDataBase.format(date));
         } else {
             ClientId = 0;
             tvDayWorkout.setText("Клиенти за " + dfDataBase.format(date));
@@ -190,14 +211,17 @@ public class ClientScheduleActivity extends Activity {
 
         } else {
             String log = "Няма клиенти";
+            alClients = new ArrayList<Client>();
+            rlAdd.setVisibility(View.GONE);
+            if (name != null&&lClients.size()==0) {
+                emptyClientList.setVisibility(View.GONE);
+                rlAdd.setVisibility(View.VISIBLE);
+                bAddWO.setText("Добави тренировка");
 
-            if (name != null) {
-                emptyClientList.setText("");
             } else {
                 emptyClientList.setText(log);
             }
 
-            alClients = new ArrayList<Client>();
             adapter = new CustomAdapterClients(ClientScheduleActivity.this,
                     alClients);
             dataList.setAdapter(adapter);
