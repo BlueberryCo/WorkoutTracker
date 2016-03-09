@@ -3,7 +3,7 @@ package blueberryco.entities;
 /**
  * Created by boiko on 25-Jan-16.
  */
-public class CategoryInfo {
+public class CategoryInfo implements Comparable<CategoryInfo> {
 
     private int id;
     private String bgTranslation;
@@ -38,5 +38,29 @@ public class CategoryInfo {
 
     public void setEnTranslation(String enTranslation) {
         this.enTranslation = enTranslation;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj instanceof CategoryInfo){
+            if(((CategoryInfo)obj).getId() == this.id){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public int compareTo(CategoryInfo another){
+        if(this.equals(another)){
+            return 0;
+        }
+
+        if(this.id < another.getId()){
+            return -1;
+        }
+
+        return 1;
     }
 }
