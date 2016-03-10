@@ -75,7 +75,7 @@ public class TrainerActivity extends Activity {
                         break;
                     case R.id.ibWOD:
                         Toast.makeText(TrainerActivity.this, "Button WorkoutDetailsActivity wod of trainer ", Toast.LENGTH_SHORT).show();
-                        Intent intentibWOD = new Intent(getApplicationContext(), WorkoutDetailsActivity.class);
+                        Intent intentibWOD = new Intent(getApplicationContext(), ExpandableListMain.class);
                         startActivity(intentibWOD);
                         break;
                     case R.id.ibProgram:
