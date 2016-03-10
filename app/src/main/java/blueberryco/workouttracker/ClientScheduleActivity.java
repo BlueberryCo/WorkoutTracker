@@ -87,8 +87,10 @@ public class ClientScheduleActivity extends Activity {
             setCurrentClient(cl);
         } else
             ClientId = 0;
+
+        Log.d(LOGTAG, " Dates from db ClientId " + ClientId);
         evDates = db.getWorkoutDays(ClientId);
-        Log.d(LOGTAG, " Dates from db " + events);
+        Log.d(LOGTAG, " Dates from db " + evDates);
 
         for (String stringDate : evDates) {
             Date eventDate = null;
@@ -205,6 +207,10 @@ public class ClientScheduleActivity extends Activity {
                                                     String member_name = alClients.get(position).getFirstName();
                                                     Toast.makeText(getApplicationContext(), "" + member_name,
                                                             Toast.LENGTH_SHORT).show();
+                                                    Log.d(LOGTAG, "  alClients.get(position) " +  alClients.get(position).getId());
+                                                    Intent intent = new Intent(getApplicationContext(), ClientScheduleActivity.class);
+                                                    intent.putExtra(ClientScheduleActivity.CLIENT_KEY, alClients.get(position));
+                                                    startActivity(intent);
                                                 }
                                             }
             );

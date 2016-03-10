@@ -181,12 +181,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<String> getWorkoutDays(int ClientId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String condition = null;
-        if(ClientId>0){
-            condition = "where ClientId= "+ ClientId;
-        }else {
-            condition= "";
+        if (ClientId > 0) {
+            condition = "where ClientId= " + ClientId;
+        } else {
+            condition = "";
         }
-        String query = "select distinct date(Date) as dayWO from " + TABLE_CLIENT_WORKOUT +" "+condition;
+        Log.d(LOG, " getWorkoutDays query ClientId ClientId->" + ClientId);
+        String query = "select distinct date(Date) as dayWO from " + TABLE_CLIENT_WORKOUT + " " + condition;
         Log.d(LOG, " getWorkoutDays query->" + query);
         List<String> results = new ArrayList<>();
 
@@ -208,14 +209,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Client> getAllClientsWorkoutForDate(String date, int ClienId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String condition = null;
-if(ClienId>0){
-    condition = "and clients.Id = "+ ClienId;
-}else {
-    condition= "";
-}
+        if (ClienId > 0) {
+            condition = "and clients.Id = " + ClienId;
+        } else {
+            condition = "";
+        }
         String query = "SELECT * FROM " + TABLE_CLIENTS + " JOIN " + TABLE_CLIENT_WORKOUT
                 + "  ON client_workout.ClientId =clients.Id  WHERE client_workout." +
-                KEY_DATE_CLIENT_WORKOUT + " between '" + date + " 00:00:00' and '" + date + " 23:59:59' "+condition;
+                KEY_DATE_CLIENT_WORKOUT + " between '" + date + " 00:00:00' and '" + date + " 23:59:59' " + condition;
         Log.d(LOG, " getAllClientsWorkoutForDate query->" + query);
 
         List<Client> results = new ArrayList<>();
@@ -225,7 +226,7 @@ if(ClienId>0){
         if (c.moveToFirst()) {
             do {
                 Client result = new Client();
-                result.setId(c.getInt(c.getColumnIndex(KEY_ID_CLIENT)));
+                result.setId(c.getInt(c.getColumnIndex("ClientId")));
                 result.setFirstName(c.getString(c.getColumnIndex(KEY_FIRST_NAME)));
                 result.setLastName(c.getString(c.getColumnIndex(KEY_LAST_NAME)));
                 if (!c.isNull(c.getColumnIndex(KEY_BIRTH_DATE))) {
@@ -244,7 +245,7 @@ if(ClienId>0){
                     result.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
                 }
                 result.setType(Client.CLIENT_TYPE_CLIENT);
-
+                Log.d("getAtForDate", "Result: " + result.getId() + " " + result.getFirstName());
                 results.add(result);
             } while (c.moveToNext());
         }
@@ -295,7 +296,7 @@ if(ClienId>0){
         return Util.isNullOrEmptyString(input);
     }
 
-    public static String getMainDatabaseName(){
+    public static String getMainDatabaseName() {
         return DATABASE_NAME;
     }
 
