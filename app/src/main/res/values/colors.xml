@@ -4,9 +4,12 @@
     <color name="greyed_out">#c7c7c7</color>
     <color name="greyed_out_press">#c2c2a3</color>
 
-    <color name="summer">#44eebd82</color>
-    <color name="fall">#44d8d27e</color>
-    <color name="winter">#44a1c1da</color>
-    <color name="spring">#448da64b</color>
+    <color name="summer">#77eebd82</color>
+    <color name="fall">#77d8d27e</color>
+    <color name="winter">#77a1c1da</color>
+    <color name="spring">#778da64b</color>
+
+    <color name="blue3">#ffffff</color>
+    <color name="green3">#000000</color>
 
 </resources>

@@ -8,11 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,11 +34,19 @@ public class ExpandableListMain extends ExpandableListActivity {
     private ArrayList<Parent> parents;
     List<CategoryInfo> result = new ArrayList<>();
     private BasicExercises be = new BasicExercises();
+    ListView selectedWODList;
+    CustomAdapterWODList adapter;
+    ArrayList<String> alWODs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_workout_details);
+        assignUiElements();
+        alWODs = new ArrayList<String>();
+        String test = "testtt";
+        alWODs.add(test);
+        loadSelectedEx();
         Resources res = this.getResources();
         Drawable devider = res.getDrawable(R.drawable.line);
 
@@ -49,10 +59,40 @@ public class ExpandableListMain extends ExpandableListActivity {
         registerForContextMenu(getExpandableListView());
 
         //Creating static data in arraylist
-        final ArrayList<Parent> dummyList = buildDummyData();
+        final ArrayList<Parent> dummyList
+                = listData();
 
         // Adding ArrayList data to ExpandableListView values
         loadHosts(dummyList);
+    }
+
+    private void assignUiElements() {
+        selectedWODList = (ListView) findViewById(R.id.lvWOD);
+    }
+
+    public void loadSelectedEx() {
+
+        adapter = new CustomAdapterWODList(this, alWODs
+        );
+        selectedWODList.setAdapter(adapter);
+        selectedWODList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                                                    long id) {
+                                                String member_name = alWODs.get(position).toString();
+                                                Toast.makeText(getApplicationContext(), "" + member_name,
+                                                        Toast.LENGTH_SHORT).show();
+
+                                               // WorkoutOfTheDay cl = alWODs.get(position);
+                                                //Intent intent = new Intent(getApplicationContext(), ClientScheduleActivity.class);
+                                               // intent.putExtra(ClientScheduleActivity.CLIENT_KEY, cl);
+                                                //startActivity(intent);
+
+
+                                            }
+                                        }
+
+        );
     }
 
     /**
@@ -60,16 +100,16 @@ public class ExpandableListMain extends ExpandableListActivity {
      *
      * @return
      */
-    private ArrayList<Parent> buildDummyData() {
+    private ArrayList<Parent> listData() {
         // Creating ArrayList of type parent class to store parent class objects
         final ArrayList<Parent> list = new ArrayList<Parent>();
         result = be.getAllCategories();
         for (int i = 1; i < result.size(); i++) {
             //Create parent class object
             final Parent parent = new Parent();
-            parent.setName("");
+            //parent.setName("");
             parent.setText1("" + result.get(i).getBgTranslation());
-            parent.setText2(" ");
+            // parent.setText2(" ");
             parent.setChildren(new ArrayList<Child>());
 
             List<BasicExerciseInfo> resultChild = new ArrayList<>();
@@ -136,10 +176,10 @@ public class ExpandableListMain extends ExpandableListActivity {
 
             // Get grouprow.xml file elements and set values
             ((TextView) convertView.findViewById(R.id.text1)).setText(parent.getText1());
-            ((TextView) convertView.findViewById(R.id.text)).setText(parent.getText2());
+            //  ((TextView) convertView.findViewById(R.id.text)).setText(parent.getText2());
             ImageView image = (ImageView) convertView.findViewById(R.id.image);
 
-            image.setImageResource(R.drawable.wod_small);
+            //image.setImageResource(R.drawable.wod_small);
 
             ImageView rightcheck = (ImageView) convertView.findViewById(R.id.rightcheck);
 
@@ -149,15 +189,15 @@ public class ExpandableListMain extends ExpandableListActivity {
             if (parent.isChecked() == true) {
                 rightcheck.setImageResource(R.drawable.rightcheck);
             } else {
-                rightcheck.setImageResource(R.drawable.button_check);
+                rightcheck.setImageResource(0);
             }
 
-            // Get grouprow.xml file checkbox elements
+            /*// Get grouprow.xml file checkbox elements
             CheckBox checkbox = (CheckBox) convertView.findViewById(R.id.checkbox);
             checkbox.setChecked(parent.isChecked());
 
             // Set CheckUpdateListener for CheckBox (see below CheckUpdateListener class)
-            checkbox.setOnCheckedChangeListener(new CheckUpdateListener(parent));
+            checkbox.setOnCheckedChangeListener(new CheckUpdateListener(parent));*/
 
             return convertView;
         }
@@ -176,7 +216,14 @@ public class ExpandableListMain extends ExpandableListActivity {
             // Get childrow.xml file elements and set values
             ((TextView) convertView.findViewById(R.id.text1)).setText(child.getText1());
             ImageView image = (ImageView) convertView.findViewById(R.id.image);
-            image.setImageResource(R.drawable.wod_small);
+            // image.setImageResource(R.drawable.wod_small);
+
+            // Get grouprow.xml file checkbox elements
+            CheckBox checkbox = (CheckBox) convertView.findViewById(R.id.checkbox);
+            checkbox.setChecked(parent.isChecked());
+
+            // Set CheckUpdateListener for CheckBox (see below CheckUpdateListener class)
+            checkbox.setOnCheckedChangeListener(new CheckUpdateListener(parent));
 
             return convertView;
         }
@@ -197,8 +244,8 @@ public class ExpandableListMain extends ExpandableListActivity {
             if (ChildClickStatus != childPosition) {
                 ChildClickStatus = childPosition;
 
-                Toast.makeText(getApplicationContext(), "Parent :" + groupPosition + " Child :" + childPosition,
-                        Toast.LENGTH_LONG).show();
+                // Toast.makeText(getApplicationContext(), "Parent :" + groupPosition + " Child :" + childPosition,
+                // Toast.LENGTH_LONG).show();
             }
 
             return childPosition;
@@ -289,9 +336,9 @@ public class ExpandableListMain extends ExpandableListActivity {
                 ((MyExpandableListAdapter) getExpandableListAdapter()).notifyDataSetChanged();
 
                 final Boolean checked = parent.isChecked();
-                Toast.makeText(getApplicationContext(),
-                        "Parent : " + parent.getName() + " " + (checked ? STR_CHECKED : STR_UNCHECKED),
-                        Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),
+                //  "Parent : " + parent.getName() + " " + (checked ? STR_CHECKED : STR_UNCHECKED),
+                //  Toast.LENGTH_LONG).show();
             }
         }
         /***********************************************************************/

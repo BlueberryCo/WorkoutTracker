@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:background="#ffffff"
+    android:padding="5dp"
+    android:paddingTop="15dp"
+    android:stretchColumns="3">
+
+    <TableRow android:background="@color/winter">
+
+        <TextView
+            android:id="@+id/laptop"
+            android:layout_weight="1"
+            android:layout_width="200dp"
+            android:background="@color/spring"
+            android:layout_gravity="center_vertical"
+            android:text="ssssss"
+            android:padding="5dp"
+            android:textColor="#ffffff"
+            android:textSize="17dip"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/laptop2"
+            android:layout_weight="1"
+            android:background="@color/summer"
+            android:layout_gravity="center_vertical"
+            android:text="ssssss"
+            android:padding="5dp"
+            android:textColor="#ffffff"
+            android:textSize="17dip"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/laptop3"
+            android:layout_weight="1"
+            android:background="@color/spring"
+            android:layout_gravity="center_vertical"
+            android:text="ssssss"
+            android:padding="5dp"
+            android:textColor="#ffffff"
+            android:textSize="17dip"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="2dp"
+            android:src="@drawable/wod_small" />
+
+    </TableRow>
+</TableLayout>
