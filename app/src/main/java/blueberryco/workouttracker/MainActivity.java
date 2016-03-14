@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import blueberryco.database.DatabaseHelper;
 import blueberryco.entities.Client;
+import blueberryco.entities.locale.FitInApplication;
 
 public class MainActivity extends Activity {
 
@@ -17,6 +18,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setLanguage();
         //checkHasOwner(); //If owner is already created redirect to TrainerActivity
         bindElements();
     }
@@ -67,6 +69,11 @@ public class MainActivity extends Activity {
 
             this.finish();
         }
+    }
+
+    private void setLanguage(){
+        FitInApplication.updateLanguage(this);
+        recreate();
     }
 
     @Override
