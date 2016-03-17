@@ -32,4 +32,7 @@
     <string name="tvCalendarmenu">CALENDAR</string>
     <string name="tvClientProfile">PROFILE</string>
     <string name="tvClients">Клиенти</string>
+    <string name="backup_in_progress">Backup in progress...</string>
+    <string name="restore_in_progress">Restore in progress...</string>
+    <string name="information">Information</string>
 </resources>

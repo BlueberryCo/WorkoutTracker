@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import blueberryco.entities.Client;
 
-public class TrainerActivity extends Activity {
+public class TrainerActivity extends BaseDriveActivity {
     ImageButton ibAdd;
     ImageButton ibProgram;
     ImageButton ibInfo;

@@ -1,6 +1,5 @@
 package blueberryco.workouttracker;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,7 +11,7 @@ import blueberryco.database.DatabaseHelper;
 import blueberryco.entities.Client;
 import blueberryco.entities.locale.FitInApplication;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseDriveActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +51,7 @@ public class MainActivity extends Activity {
         btnSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                Client owner = db.getOwner();
-                Intent intent = new Intent(getApplicationContext(), CreateOwnerActivity.class);
-                intent.putExtra(CreateOwnerActivity.EXISTING_CLIENT_KEY, owner);
-                startActivity(intent);
+                restore();
             }
         });
     }
