@@ -12,6 +12,10 @@ import java.util.Map;
  */
 public class BasicExercises {
 
+    private BasicExercises(){
+        throw new AssertionError("Static class constructor call.");
+    }
+
     //Exercises categories constants
     public static final int BARBELL_MOVES = 1;
     public static final int GYMNASTIC_MOVES = 2;
@@ -207,7 +211,7 @@ public class BasicExercises {
         return basicExerciseInfo;
     }
 
-    public boolean shouldConstructCrossfitWorkout(BasicExerciseInfo basicExerciseInfo){
+    public static boolean shouldConstructCrossfitWorkout(BasicExerciseInfo basicExerciseInfo){
         List<Integer> trueCollection = new ArrayList<>();
 
         trueCollection.add(AMRAP);

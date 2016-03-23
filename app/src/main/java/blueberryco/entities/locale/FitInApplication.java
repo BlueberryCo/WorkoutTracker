@@ -41,6 +41,19 @@ public class FitInApplication extends Application {
         setLanguage(context, EN_LANGUAGE);
     }
 
+    public static String getTranslation(Translatable translatable, Context context){
+        String currentLanguage = context.getResources().getConfiguration().locale.getLanguage();
+
+        switch (currentLanguage){
+            case BG_LANGUAGE:
+                return translatable.getBgTranslation();
+            case EN_LANGUAGE:
+                return translatable.getEnTranslation();
+        }
+
+        return translatable.getBgTranslation();
+    }
+
     private static String getLanguage(Context context){
         SharedPreferences preffs = PreferenceManager.getDefaultSharedPreferences(context);
         return preffs.getString(LANGUAGE_KEY, BG_LANGUAGE);

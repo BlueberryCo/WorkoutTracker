@@ -24,6 +24,7 @@ import java.util.List;
 import blueberryco.entities.BasicExerciseInfo;
 import blueberryco.entities.BasicExercises;
 import blueberryco.entities.CategoryInfo;
+import blueberryco.entities.locale.FitInApplication;
 
 public class ExpandableListMain extends ExpandableListActivity {
     //Initialize variables
@@ -33,7 +34,6 @@ public class ExpandableListMain extends ExpandableListActivity {
     private int ChildClickStatus = -1;
     private ArrayList<Parent> parents;
     List<CategoryInfo> result = new ArrayList<>();
-    private BasicExercises be = new BasicExercises();
     ListView selectedWODList;
     CustomAdapterWODList adapter;
     ArrayList<String> alWODs;
@@ -103,22 +103,24 @@ public class ExpandableListMain extends ExpandableListActivity {
     private ArrayList<Parent> listData() {
         // Creating ArrayList of type parent class to store parent class objects
         final ArrayList<Parent> list = new ArrayList<Parent>();
-        result = be.getAllCategories();
-        for (int i = 1; i < result.size(); i++) {
+        result = BasicExercises.getAllCategories();
+        for (int i = 0; i < result.size(); i++) {
             //Create parent class object
             final Parent parent = new Parent();
             //parent.setName("");
-            parent.setText1("" + result.get(i).getBgTranslation());
+            //parent.setText1("" + result.get(i).getBgTranslation());
+            parent.setText1("" + FitInApplication.getTranslation(result.get(i), this)); // Apply translation mechanism
             // parent.setText2(" ");
             parent.setChildren(new ArrayList<Child>());
 
             List<BasicExerciseInfo> resultChild = new ArrayList<>();
-            resultChild = be.getExercisesForCategory(result.get(i).getId());
+            resultChild = BasicExercises.getExercisesForCategory(result.get(i).getId());
             for (int k = 0; k < resultChild.size(); k++) {
                 // Create Child class object
                 final Child child = new Child();
                 child.setName("" + i);
-                child.setText1(resultChild.get(k).getBgTranslation());
+                //child.setText1(resultChild.get(k).getBgTranslation());
+                child.setText1(FitInApplication.getTranslation(resultChild.get(k), this)); // Apply translation mechanism
 
                 //Add Child class object to parent class object
                 parent.getChildren().add(child);

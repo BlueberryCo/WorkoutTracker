@@ -68,7 +68,6 @@ public class MainActivity extends BaseDriveActivity {
 
     private void setLanguage(){
         FitInApplication.updateLanguage(this);
-        recreate();
     }
 
     @Override

@@ -94,7 +94,7 @@ public abstract class BaseDriveActivity extends Activity implements
      */
     @Override
     protected void onPause() {
-        if (mGoogleApiClient != null) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
         super.onPause();

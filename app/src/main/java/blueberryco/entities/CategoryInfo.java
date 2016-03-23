@@ -1,9 +1,11 @@
 package blueberryco.entities;
 
+import blueberryco.entities.locale.Translatable;
+
 /**
  * Created by boiko on 25-Jan-16.
  */
-public class CategoryInfo implements Comparable<CategoryInfo> {
+public class CategoryInfo implements Comparable<CategoryInfo>, Translatable {
 
     private int id;
     private String bgTranslation;

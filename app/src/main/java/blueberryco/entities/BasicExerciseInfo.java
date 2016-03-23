@@ -1,9 +1,11 @@
 package blueberryco.entities;
 
+import blueberryco.entities.locale.Translatable;
+
 /**
  * Created by boiko on 25-Jan-16.
  */
-public class BasicExerciseInfo implements Comparable<BasicExerciseInfo> {
+public class BasicExerciseInfo implements Comparable<BasicExerciseInfo>, Translatable {
 
     private int id;
     private String bgTranslation;
