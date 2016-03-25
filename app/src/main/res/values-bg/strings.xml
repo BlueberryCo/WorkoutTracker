@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sBLogin">логин</string>
+    <string name="network_off_message">Моля активирайте мобилните данни или Wi-Fi!</string>
 </resources>

@@ -3,9 +3,12 @@ package blueberryco.workouttracker;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -294,9 +297,9 @@ public abstract class BaseDriveActivity extends Activity implements
 
             if(!result.isSuccess()){
                 Log.e("-- ERROR BACKUP --", result.getMessage());
-                showDialogMessage("Error while backup files!");
+                showDialogMessage(getResources().getString(R.string.sync_error));
             }else {
-                showDialogMessage("Backup completed successfully!");
+                showDialogMessage(getResources().getString(R.string.backup_completed));
             }
         }
     }
@@ -318,7 +321,7 @@ public abstract class BaseDriveActivity extends Activity implements
 
             if(!result.isSuccess()){
                 Log.e("-- ERROR RESTORE --", result.getMessage());
-                showMessage("Error reading backup file!");
+                showMessage(getResources().getString(R.string.sync_error));
                 return;
             }
 
@@ -326,11 +329,16 @@ public abstract class BaseDriveActivity extends Activity implements
             BackupAgent agent = new BackupAgent(BaseDriveActivity.this);
             agent.readFromInputStream(contents.getInputStream());
 
-            showDialogMessage("Restore completed successfully!");
+            showDialogMessage(getResources().getString(R.string.restore_completed));
         }
     }
 
     protected void backup(){
+        if(!isNetworkAvailable()){
+            showDialogMessage(this.getResources().getString(R.string.network_off_message));
+            return;
+        }
+
         connectToGoogleDrive();
 
         showProgress(true, getResources().getString(R.string.backup_in_progress));
@@ -344,6 +352,11 @@ public abstract class BaseDriveActivity extends Activity implements
     }
 
     protected void restore(){
+        if(!isNetworkAvailable()){
+            showDialogMessage(this.getResources().getString(R.string.network_off_message));
+            return;
+        }
+
         connectToGoogleDrive();
 
         showProgress(true, getResources().getString(R.string.restore_in_progress));
@@ -365,6 +378,15 @@ public abstract class BaseDriveActivity extends Activity implements
         }else {
             progressDialog.dismiss();
         }
+    }
+
+    private boolean isNetworkAvailable(){
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private void showDialogMessage(String message){

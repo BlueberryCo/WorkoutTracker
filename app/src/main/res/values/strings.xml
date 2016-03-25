@@ -35,4 +35,8 @@
     <string name="backup_in_progress">Backup in progress...</string>
     <string name="restore_in_progress">Restore in progress...</string>
     <string name="information">Information</string>
+    <string name="network_off_message">Please switch on mobile data or Wi-Fi!</string>
+    <string name="restore_completed">Restore completed successfully!</string>
+    <string name="backup_completed">"Backup completed successfully!"</string>
+    <string name="sync_error">Error while syncing!</string>
 </resources>
